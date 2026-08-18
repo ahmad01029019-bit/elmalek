@@ -26,10 +26,16 @@ function MarketerPage() {
     queryKey: ["marketer-codes", uid],
     enabled: !!uid,
     queryFn: async () => {
+      const { data: m } = await supabase
+        .from("marketers")
+        .select("id")
+        .eq("user_id", uid!)
+        .maybeSingle();
+      if (!m) return [];
       const { data } = await supabase
         .from("promo_codes")
         .select("id,code,discount_percent,uses_count,is_active")
-        .eq("marketer_id", uid!);
+        .eq("marketer_id", m.id);
       return data ?? [];
     },
   });
@@ -38,16 +44,22 @@ function MarketerPage() {
     queryKey: ["marketer-commissions", uid],
     enabled: !!uid,
     queryFn: async () => {
+      const { data: m } = await supabase
+        .from("marketers")
+        .select("id")
+        .eq("user_id", uid!)
+        .maybeSingle();
+      if (!m) return [];
       const { data } = await supabase
-        .from("commissions")
-        .select("id,amount,status,created_at")
-        .eq("marketer_id", uid!)
+        .from("referrals")
+        .select("id,commission,created_at")
+        .eq("marketer_id", m.id)
         .order("created_at", { ascending: false });
       return data ?? [];
     },
   });
 
-  const total = (commissions ?? []).reduce((s, c) => s + Number(c.amount), 0);
+  const total = (commissions ?? []).reduce((s, c) => s + Number(c.commission), 0);
 
   return (
     <AppShell title="لوحة المسوق">
@@ -92,8 +104,7 @@ function MarketerPage() {
             {(commissions ?? []).map((c) => (
               <li key={c.id} className="flex items-center justify-between py-3 text-sm">
                 <span>{new Date(c.created_at).toLocaleDateString("ar-EG")}</span>
-                <Badge variant="outline">{c.status}</Badge>
-                <span className="font-bold">{formatEGP(Number(c.amount))}</span>
+                <span className="font-bold">{formatEGP(Number(c.commission))}</span>
               </li>
             ))}
           </ul>
