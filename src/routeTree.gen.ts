@@ -19,6 +19,7 @@ import { Route as MarketersRouteImport } from './routes/marketers'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VisionRouteImport } from './routes/vision'
+import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedSubjectsRouteImport } from './routes/_authenticated/subjects'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
@@ -77,6 +78,11 @@ const VisionRoute = VisionRouteImport.update({
   path: '/vision',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCartRoute = AuthenticatedCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
+  '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
@@ -147,6 +154,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
+  '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
+  '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/subjects': typeof AuthenticatedSubjectsRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
@@ -189,6 +198,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vision'
+    | '/cart'
     | '/dashboard'
     | '/subjects'
     | '/courses/$courseId'
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vision'
+    | '/cart'
     | '/dashboard'
     | '/subjects'
     | '/courses/$courseId'
@@ -228,6 +239,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vision'
+    | '/_authenticated/cart'
     | '/_authenticated/dashboard'
     | '/_authenticated/subjects'
     | '/courses/$courseId'
@@ -329,6 +341,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VisionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/cart': {
+      id: '/_authenticated/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof AuthenticatedCartRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -389,11 +408,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedSubjectsRoute: typeof AuthenticatedSubjectsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedSubjectsRoute: AuthenticatedSubjectsRoute,
 }
