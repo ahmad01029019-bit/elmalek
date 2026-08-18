@@ -22,6 +22,7 @@ import { Route as VisionRouteImport } from './routes/vision'
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedSubjectsRouteImport } from './routes/_authenticated/subjects'
+import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated/wallet'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
 import { Route as LibraryIndexRouteImport } from './routes/library.index'
@@ -93,6 +94,11 @@ const AuthenticatedSubjectsRoute = AuthenticatedSubjectsRouteImport.update({
   path: '/subjects',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedWalletRoute = AuthenticatedWalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
+  '/wallet': typeof AuthenticatedWalletRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
   '/teachers/$slug': typeof TeachersSlugRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
+  '/wallet': typeof AuthenticatedWalletRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
   '/teachers/$slug': typeof TeachersSlugRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/subjects': typeof AuthenticatedSubjectsRoute
+  '/_authenticated/wallet': typeof AuthenticatedWalletRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
   '/teachers/$slug': typeof TeachersSlugRoute
@@ -201,6 +210,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/dashboard'
     | '/subjects'
+    | '/wallet'
     | '/courses/$courseId'
     | '/library/$bookId'
     | '/teachers/$slug'
@@ -221,6 +231,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/dashboard'
     | '/subjects'
+    | '/wallet'
     | '/courses/$courseId'
     | '/library/$bookId'
     | '/teachers/$slug'
@@ -242,6 +253,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cart'
     | '/_authenticated/dashboard'
     | '/_authenticated/subjects'
+    | '/_authenticated/wallet'
     | '/courses/$courseId'
     | '/library/$bookId'
     | '/teachers/$slug'
@@ -362,6 +374,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSubjectsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/wallet': {
+      id: '/_authenticated/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof AuthenticatedWalletRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/courses/': {
       id: '/courses/'
       path: '/courses'
@@ -411,12 +430,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedSubjectsRoute: typeof AuthenticatedSubjectsRoute
+  AuthenticatedWalletRoute: typeof AuthenticatedWalletRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedSubjectsRoute: AuthenticatedSubjectsRoute,
+  AuthenticatedWalletRoute: AuthenticatedWalletRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
