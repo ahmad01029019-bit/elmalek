@@ -21,6 +21,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VisionRouteImport } from './routes/vision'
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedStatsRouteImport } from './routes/_authenticated/stats'
 import { Route as AuthenticatedSubjectsRouteImport } from './routes/_authenticated/subjects'
 import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated/wallet'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
@@ -89,6 +90,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStatsRoute = AuthenticatedStatsRouteImport.update({
+  id: '/stats',
+  path: '/stats',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSubjectsRoute = AuthenticatedSubjectsRouteImport.update({
   id: '/subjects',
   path: '/subjects',
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/vision': typeof VisionRoute
   '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/stats': typeof AuthenticatedStatsRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/vision': typeof VisionRoute
   '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/stats': typeof AuthenticatedStatsRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/vision': typeof VisionRoute
   '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/stats': typeof AuthenticatedStatsRoute
   '/_authenticated/subjects': typeof AuthenticatedSubjectsRoute
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
     | '/vision'
     | '/cart'
     | '/dashboard'
+    | '/stats'
     | '/subjects'
     | '/wallet'
     | '/courses/$courseId'
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/vision'
     | '/cart'
     | '/dashboard'
+    | '/stats'
     | '/subjects'
     | '/wallet'
     | '/courses/$courseId'
@@ -252,6 +263,7 @@ export interface FileRouteTypes {
     | '/vision'
     | '/_authenticated/cart'
     | '/_authenticated/dashboard'
+    | '/_authenticated/stats'
     | '/_authenticated/subjects'
     | '/_authenticated/wallet'
     | '/courses/$courseId'
@@ -367,6 +379,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/stats': {
+      id: '/_authenticated/stats'
+      path: '/stats'
+      fullPath: '/stats'
+      preLoaderRoute: typeof AuthenticatedStatsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/subjects': {
       id: '/_authenticated/subjects'
       path: '/subjects'
@@ -429,6 +448,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedStatsRoute: typeof AuthenticatedStatsRoute
   AuthenticatedSubjectsRoute: typeof AuthenticatedSubjectsRoute
   AuthenticatedWalletRoute: typeof AuthenticatedWalletRoute
 }
@@ -436,6 +456,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedStatsRoute: AuthenticatedStatsRoute,
   AuthenticatedSubjectsRoute: AuthenticatedSubjectsRoute,
   AuthenticatedWalletRoute: AuthenticatedWalletRoute,
 }
