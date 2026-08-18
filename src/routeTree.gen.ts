@@ -20,6 +20,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VisionRouteImport } from './routes/vision'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedSubjectsRouteImport } from './routes/_authenticated/subjects'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
 import { Route as LibraryIndexRouteImport } from './routes/library.index'
@@ -81,6 +82,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSubjectsRoute = AuthenticatedSubjectsRouteImport.update({
+  id: '/subjects',
+  path: '/subjects',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/subjects': typeof AuthenticatedSubjectsRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
   '/teachers/$slug': typeof TeachersSlugRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/subjects': typeof AuthenticatedSubjectsRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
   '/teachers/$slug': typeof TeachersSlugRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/subjects': typeof AuthenticatedSubjectsRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
   '/teachers/$slug': typeof TeachersSlugRoute
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/vision'
     | '/dashboard'
+    | '/subjects'
     | '/courses/$courseId'
     | '/library/$bookId'
     | '/teachers/$slug'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/vision'
     | '/dashboard'
+    | '/subjects'
     | '/courses/$courseId'
     | '/library/$bookId'
     | '/teachers/$slug'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/vision'
     | '/_authenticated/dashboard'
+    | '/_authenticated/subjects'
     | '/courses/$courseId'
     | '/library/$bookId'
     | '/teachers/$slug'
@@ -324,6 +336,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/subjects': {
+      id: '/_authenticated/subjects'
+      path: '/subjects'
+      fullPath: '/subjects'
+      preLoaderRoute: typeof AuthenticatedSubjectsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/courses/': {
       id: '/courses/'
       path: '/courses'
@@ -371,10 +390,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedSubjectsRoute: typeof AuthenticatedSubjectsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedSubjectsRoute: AuthenticatedSubjectsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
