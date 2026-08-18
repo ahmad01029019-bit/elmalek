@@ -19,14 +19,18 @@ import { Route as MarketersRouteImport } from './routes/marketers'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VisionRouteImport } from './routes/vision'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedMarketerRouteImport } from './routes/_authenticated/marketer'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedRecordsRouteImport } from './routes/_authenticated/records'
 import { Route as AuthenticatedStatsRouteImport } from './routes/_authenticated/stats'
 import { Route as AuthenticatedSubjectsRouteImport } from './routes/_authenticated/subjects'
 import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated/wallet'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
+import { Route as LearnCourseIdRouteImport } from './routes/learn.$courseId'
 import { Route as LibraryIndexRouteImport } from './routes/library.index'
 import { Route as LibraryBookIdRouteImport } from './routes/library.$bookId'
 import { Route as TeachersIndexRouteImport } from './routes/teachers.index'
@@ -81,6 +85,11 @@ const VisionRoute = VisionRouteImport.update({
   path: '/vision',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCartRoute = AuthenticatedCartRouteImport.update({
   id: '/cart',
   path: '/cart',
@@ -89,6 +98,16 @@ const AuthenticatedCartRoute = AuthenticatedCartRouteImport.update({
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMarketerRoute = AuthenticatedMarketerRouteImport.update({
+  id: '/marketer',
+  path: '/marketer',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedRecordsRoute = AuthenticatedRecordsRouteImport.update({
@@ -119,6 +138,11 @@ const CoursesIndexRoute = CoursesIndexRouteImport.update({
 const CoursesCourseIdRoute = CoursesCourseIdRouteImport.update({
   id: '/courses/$courseId',
   path: '/courses/$courseId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnCourseIdRoute = LearnCourseIdRouteImport.update({
+  id: '/learn/$courseId',
+  path: '/learn/$courseId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryIndexRoute = LibraryIndexRouteImport.update({
@@ -152,13 +176,17 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/marketer': typeof AuthenticatedMarketerRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/records': typeof AuthenticatedRecordsRoute
   '/stats': typeof AuthenticatedStatsRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/learn/$courseId': typeof LearnCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
   '/teachers/$slug': typeof TeachersSlugRoute
   '/courses/': typeof CoursesIndexRoute
@@ -175,13 +203,17 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/marketer': typeof AuthenticatedMarketerRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/records': typeof AuthenticatedRecordsRoute
   '/stats': typeof AuthenticatedStatsRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/learn/$courseId': typeof LearnCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
   '/teachers/$slug': typeof TeachersSlugRoute
   '/courses': typeof CoursesIndexRoute
@@ -200,13 +232,17 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/marketer': typeof AuthenticatedMarketerRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/records': typeof AuthenticatedRecordsRoute
   '/_authenticated/stats': typeof AuthenticatedStatsRoute
   '/_authenticated/subjects': typeof AuthenticatedSubjectsRoute
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
+  '/learn/$courseId': typeof LearnCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
   '/teachers/$slug': typeof TeachersSlugRoute
   '/courses/': typeof CoursesIndexRoute
@@ -225,13 +261,17 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vision'
+    | '/admin'
     | '/cart'
     | '/dashboard'
+    | '/marketer'
+    | '/profile'
     | '/records'
     | '/stats'
     | '/subjects'
     | '/wallet'
     | '/courses/$courseId'
+    | '/learn/$courseId'
     | '/library/$bookId'
     | '/teachers/$slug'
     | '/courses/'
@@ -248,13 +288,17 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vision'
+    | '/admin'
     | '/cart'
     | '/dashboard'
+    | '/marketer'
+    | '/profile'
     | '/records'
     | '/stats'
     | '/subjects'
     | '/wallet'
     | '/courses/$courseId'
+    | '/learn/$courseId'
     | '/library/$bookId'
     | '/teachers/$slug'
     | '/courses'
@@ -272,13 +316,17 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/vision'
+    | '/_authenticated/admin'
     | '/_authenticated/cart'
     | '/_authenticated/dashboard'
+    | '/_authenticated/marketer'
+    | '/_authenticated/profile'
     | '/_authenticated/records'
     | '/_authenticated/stats'
     | '/_authenticated/subjects'
     | '/_authenticated/wallet'
     | '/courses/$courseId'
+    | '/learn/$courseId'
     | '/library/$bookId'
     | '/teachers/$slug'
     | '/courses/'
@@ -298,6 +346,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   VisionRoute: typeof VisionRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
+  LearnCourseIdRoute: typeof LearnCourseIdRoute
   LibraryBookIdRoute: typeof LibraryBookIdRoute
   TeachersSlugRoute: typeof TeachersSlugRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
@@ -377,6 +426,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VisionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/cart': {
       id: '/_authenticated/cart'
       path: '/cart'
@@ -389,6 +445,20 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/marketer': {
+      id: '/_authenticated/marketer'
+      path: '/marketer'
+      fullPath: '/marketer'
+      preLoaderRoute: typeof AuthenticatedMarketerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/records': {
@@ -433,6 +503,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesCourseIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/$courseId': {
+      id: '/learn/$courseId'
+      path: '/learn/$courseId'
+      fullPath: '/learn/$courseId'
+      preLoaderRoute: typeof LearnCourseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/library/': {
       id: '/library/'
       path: '/library'
@@ -465,8 +542,11 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedMarketerRoute: typeof AuthenticatedMarketerRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedRecordsRoute: typeof AuthenticatedRecordsRoute
   AuthenticatedStatsRoute: typeof AuthenticatedStatsRoute
   AuthenticatedSubjectsRoute: typeof AuthenticatedSubjectsRoute
@@ -474,8 +554,11 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedMarketerRoute: AuthenticatedMarketerRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedRecordsRoute: AuthenticatedRecordsRoute,
   AuthenticatedStatsRoute: AuthenticatedStatsRoute,
   AuthenticatedSubjectsRoute: AuthenticatedSubjectsRoute,
@@ -497,6 +580,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   VisionRoute: VisionRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
+  LearnCourseIdRoute: LearnCourseIdRoute,
   LibraryBookIdRoute: LibraryBookIdRoute,
   TeachersSlugRoute: TeachersSlugRoute,
   CoursesIndexRoute: CoursesIndexRoute,
