@@ -86,10 +86,10 @@ export const checkoutCart = createServerFn({ method: "POST" })
       .eq("id", userId);
 
     await supabase.from("wallet_transactions").insert({
-      student_id: userId,
+      user_id: userId,
       amount: -total,
-      type: "purchase",
-      note: `شراء ${cart.length} كورس`,
+      kind: "purchase",
+      description: `شراء ${cart.length} كورس`,
     });
 
     if (promo) {
