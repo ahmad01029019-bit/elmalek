@@ -30,7 +30,7 @@ function LearnPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("courses")
-        .select("id,title,lessons(id,title,video_url,order_index)")
+        .select("id,title,lessons(id,title,youtube_id,position)")
         .eq("id", courseId)
         .maybeSingle();
       return data;
@@ -51,7 +51,7 @@ function LearnPage() {
   });
 
   const lessons = [...(course?.lessons ?? [])].sort(
-    (a, b) => (a.order_index ?? 0) - (b.order_index ?? 0),
+    (a, b) => (a.position ?? 0) - (b.position ?? 0),
   );
   const active = lessons.find((l) => l.id === activeId) ?? lessons[0];
   const done = new Set(progress ?? []);
@@ -79,9 +79,9 @@ function LearnPage() {
       <div className="grid gap-6 p-4 lg:grid-cols-[1fr_320px]">
         <div className="space-y-4">
           <div className="aspect-video w-full overflow-hidden rounded-2xl bg-muted">
-            {active?.video_url ? (
+            {active?.youtube_id ? (
               <iframe
-                src={active.video_url}
+                src={`https://www.youtube.com/embed/${active.youtube_id}`}
                 title={active.title}
                 className="size-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
