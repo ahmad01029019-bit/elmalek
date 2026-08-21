@@ -17,6 +17,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as MarketersRouteImport } from './routes/marketers'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VisionRouteImport } from './routes/vision'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -74,6 +75,11 @@ const MarketersRoute = MarketersRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -180,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/marketers': typeof MarketersRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/marketers': typeof MarketersRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/marketers': typeof MarketersRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -268,6 +277,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/marketers'
     | '/privacy'
+    | '/reset-password'
     | '/terms'
     | '/vision'
     | '/admin'
@@ -296,6 +306,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/marketers'
     | '/privacy'
+    | '/reset-password'
     | '/terms'
     | '/vision'
     | '/admin'
@@ -325,6 +336,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/marketers'
     | '/privacy'
+    | '/reset-password'
     | '/terms'
     | '/vision'
     | '/_authenticated/admin'
@@ -355,6 +367,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   MarketersRoute: typeof MarketersRoute
   PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   TermsRoute: typeof TermsRoute
   VisionRoute: typeof VisionRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
@@ -422,6 +435,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -598,6 +618,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   MarketersRoute: MarketersRoute,
   PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   TermsRoute: TermsRoute,
   VisionRoute: VisionRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
