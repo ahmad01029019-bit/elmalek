@@ -89,7 +89,7 @@ function AuthPage() {
               full_name: fullName,
               phone,
               stage: isMarketer ? null : stage,
-              track: isMarketer ? null : track,
+              track: isMarketer || isPrep ? null : track,
               edu_type: isMarketer ? null : eduType,
               role: isMarketer ? "marketer" : "student",
             },
