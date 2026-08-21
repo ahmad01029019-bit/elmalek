@@ -61,6 +61,19 @@ function AuthPage() {
 
   const isSignup = mode !== "login";
   const isMarketer = mode === "marketer";
+  const isPrep = stage.includes("الإعدادي");
+
+  async function handleForgotPassword() {
+    if (!email) {
+      toast.error("اكتب بريدك الإلكتروني أولًا");
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) toast.error(error.message);
+    else toast.success("أرسلنا رابط إعادة تعيين كلمة المرور إلى بريدك.");
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
