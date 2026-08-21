@@ -17,6 +17,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as MarketersRouteImport } from './routes/marketers'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VisionRouteImport } from './routes/vision'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -35,6 +36,7 @@ import { Route as LibraryIndexRouteImport } from './routes/library.index'
 import { Route as LibraryBookIdRouteImport } from './routes/library.$bookId'
 import { Route as TeachersIndexRouteImport } from './routes/teachers.index'
 import { Route as TeachersSlugRouteImport } from './routes/teachers.$slug'
+import { Route as AuthenticatedQuizQuizIdRouteImport } from './routes/_authenticated/quiz.$quizId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -73,6 +75,11 @@ const MarketersRoute = MarketersRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -165,6 +172,11 @@ const TeachersSlugRoute = TeachersSlugRouteImport.update({
   path: '/teachers/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedQuizQuizIdRoute = AuthenticatedQuizQuizIdRouteImport.update({
+  id: '/quiz/$quizId',
+  path: '/quiz/$quizId',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -174,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/marketers': typeof MarketersRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -192,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/courses/': typeof CoursesIndexRoute
   '/library/': typeof LibraryIndexRoute
   '/teachers/': typeof TeachersIndexRoute
+  '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -201,6 +215,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/marketers': typeof MarketersRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -219,6 +234,7 @@ export interface FileRoutesByTo {
   '/courses': typeof CoursesIndexRoute
   '/library': typeof LibraryIndexRoute
   '/teachers': typeof TeachersIndexRoute
+  '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -230,6 +246,7 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/marketers': typeof MarketersRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -248,6 +265,7 @@ export interface FileRoutesById {
   '/courses/': typeof CoursesIndexRoute
   '/library/': typeof LibraryIndexRoute
   '/teachers/': typeof TeachersIndexRoute
+  '/_authenticated/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -259,6 +277,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/marketers'
     | '/privacy'
+    | '/reset-password'
     | '/terms'
     | '/vision'
     | '/admin'
@@ -277,6 +296,7 @@ export interface FileRouteTypes {
     | '/courses/'
     | '/library/'
     | '/teachers/'
+    | '/quiz/$quizId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -286,6 +306,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/marketers'
     | '/privacy'
+    | '/reset-password'
     | '/terms'
     | '/vision'
     | '/admin'
@@ -304,6 +325,7 @@ export interface FileRouteTypes {
     | '/courses'
     | '/library'
     | '/teachers'
+    | '/quiz/$quizId'
   id:
     | '__root__'
     | '/'
@@ -314,6 +336,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/marketers'
     | '/privacy'
+    | '/reset-password'
     | '/terms'
     | '/vision'
     | '/_authenticated/admin'
@@ -332,6 +355,7 @@ export interface FileRouteTypes {
     | '/courses/'
     | '/library/'
     | '/teachers/'
+    | '/_authenticated/quiz/$quizId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -343,6 +367,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   MarketersRoute: typeof MarketersRoute
   PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   TermsRoute: typeof TermsRoute
   VisionRoute: typeof VisionRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
@@ -410,6 +435,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -538,6 +570,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeachersSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/quiz/$quizId': {
+      id: '/_authenticated/quiz/$quizId'
+      path: '/quiz/$quizId'
+      fullPath: '/quiz/$quizId'
+      preLoaderRoute: typeof AuthenticatedQuizQuizIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -551,6 +590,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedStatsRoute: typeof AuthenticatedStatsRoute
   AuthenticatedSubjectsRoute: typeof AuthenticatedSubjectsRoute
   AuthenticatedWalletRoute: typeof AuthenticatedWalletRoute
+  AuthenticatedQuizQuizIdRoute: typeof AuthenticatedQuizQuizIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -563,6 +603,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedStatsRoute: AuthenticatedStatsRoute,
   AuthenticatedSubjectsRoute: AuthenticatedSubjectsRoute,
   AuthenticatedWalletRoute: AuthenticatedWalletRoute,
+  AuthenticatedQuizQuizIdRoute: AuthenticatedQuizQuizIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -577,6 +618,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   MarketersRoute: MarketersRoute,
   PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   TermsRoute: TermsRoute,
   VisionRoute: VisionRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,

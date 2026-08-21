@@ -61,6 +61,19 @@ function AuthPage() {
 
   const isSignup = mode !== "login";
   const isMarketer = mode === "marketer";
+  const isPrep = stage.includes("الإعدادي");
+
+  async function handleForgotPassword() {
+    if (!email) {
+      toast.error("اكتب بريدك الإلكتروني أولًا");
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) toast.error(error.message);
+    else toast.success("أرسلنا رابط إعادة تعيين كلمة المرور إلى بريدك.");
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -76,7 +89,7 @@ function AuthPage() {
               full_name: fullName,
               phone,
               stage: isMarketer ? null : stage,
-              track: isMarketer ? null : track,
+              track: isMarketer || isPrep ? null : track,
               edu_type: isMarketer ? null : eduType,
               role: isMarketer ? "marketer" : "student",
             },
@@ -173,9 +186,11 @@ function AuthPage() {
             )}
 
             {isSignup && !isMarketer && (
-              <div className="grid gap-4 sm:grid-cols-3">
+              <div className={`grid gap-4 ${isPrep ? "sm:grid-cols-2" : "sm:grid-cols-3"}`}>
                 <PickField label="الصف" value={stage} onChange={setStage} options={stages} />
-                <PickField label="الشعبة" value={track} onChange={setTrack} options={tracks} />
+                {!isPrep && (
+                  <PickField label="الشعبة" value={track} onChange={setTrack} options={tracks} />
+                )}
                 <PickField label="النظام" value={eduType} onChange={setEduType} options={eduTypes} />
               </div>
             )}
@@ -183,6 +198,16 @@ function AuthPage() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "جارٍ التنفيذ..." : isSignup ? "إنشاء الحساب" : "دخول"}
             </Button>
+
+            {!isSignup && (
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="w-full text-center text-sm text-muted-foreground hover:text-primary"
+              >
+                نسيت كلمة المرور؟
+              </button>
+            )}
           </form>
 
           <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">

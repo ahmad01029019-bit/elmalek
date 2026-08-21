@@ -50,6 +50,19 @@ function LearnPage() {
     },
   });
 
+  const { data: quizzes } = useQuery({
+    queryKey: ["learn-quizzes", courseId],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("quizzes")
+        .select("id,title,duration_minutes,lesson_id,course_id,lessons(course_id)")
+        .order("created_at", { ascending: true });
+      return (data ?? []).filter(
+        (q) => q.course_id === courseId || q.lessons?.course_id === courseId,
+      );
+    },
+  });
+
   const lessons = [...(course?.lessons ?? [])].sort(
     (a, b) => (a.position ?? 0) - (b.position ?? 0),
   );
@@ -122,6 +135,28 @@ function LearnPage() {
               </li>
             ))}
           </ul>
+
+          {(quizzes ?? []).length > 0 && (
+            <>
+              <h3 className="mt-5 mb-3 font-bold">الاختبارات</h3>
+              <ul className="space-y-1">
+                {(quizzes ?? []).map((q) => (
+                  <li key={q.id}>
+                    <Link
+                      to="/quiz/$quizId"
+                      params={{ quizId: q.id }}
+                      className="flex items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-accent"
+                    >
+                      <span className="truncate">{q.title}</span>
+                      <span className="shrink-0 text-xs text-muted-foreground">
+                        {q.duration_minutes} د
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </aside>
       </div>
     </div>
