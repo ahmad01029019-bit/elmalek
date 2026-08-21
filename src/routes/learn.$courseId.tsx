@@ -50,6 +50,19 @@ function LearnPage() {
     },
   });
 
+  const { data: quizzes } = useQuery({
+    queryKey: ["learn-quizzes", courseId],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("quizzes")
+        .select("id,title,duration_minutes,lesson_id,course_id,lessons(course_id)")
+        .order("created_at", { ascending: true });
+      return (data ?? []).filter(
+        (q) => q.course_id === courseId || q.lessons?.course_id === courseId,
+      );
+    },
+  });
+
   const lessons = [...(course?.lessons ?? [])].sort(
     (a, b) => (a.position ?? 0) - (b.position ?? 0),
   );
