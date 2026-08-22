@@ -203,7 +203,7 @@ function TeachersTab() {
   });
 
   async function add() {
-    if (!name || !slug || !subject) return toast.error("أكمل الاسم والمعرّف والمادة");
+    if (!name || !slug || !subject) { toast.error("أكمل الاسم والمعرّف والمادة"); return; }
     const { error } = await supabase.from("teachers").insert({
       name,
       slug: slug.trim().toLowerCase(),
@@ -213,7 +213,7 @@ function TeachersTab() {
       stages: [stage],
       is_active: true,
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("تمت إضافة المعلم");
     setName("");
     setSlug("");
@@ -225,7 +225,7 @@ function TeachersTab() {
 
   async function remove(id: string) {
     const { error } = await supabase.from("teachers").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     refresh();
   }
 
@@ -311,7 +311,7 @@ function CoursesTab() {
   });
 
   async function add() {
-    if (!title || !subject) return toast.error("أكمل عنوان الكورس والمادة");
+    if (!title || !subject) { toast.error("أكمل عنوان الكورس والمادة"); return; }
     const numeric = Number(price) || 0;
     const { error } = await supabase.from("courses").insert({
       title,
@@ -326,7 +326,7 @@ function CoursesTab() {
       is_published: true,
       cover_url: cover || null,
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("تمت إضافة الكورس");
     setTitle("");
     setSubject("");
@@ -338,13 +338,13 @@ function CoursesTab() {
 
   async function togglePublish(id: string, next: boolean) {
     const { error } = await supabase.from("courses").update({ is_published: next }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     refresh();
   }
 
   async function remove(id: string) {
     const { error } = await supabase.from("courses").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     refresh();
   }
 
@@ -474,7 +474,7 @@ function LessonsTab() {
   });
 
   async function add() {
-    if (!courseId || !title) return toast.error("اختر الكورس واكتب عنوان الدرس");
+    if (!courseId || !title) { toast.error("اختر الكورس واكتب عنوان الدرس"); return; }
     const { error } = await supabase.from("lessons").insert({
       course_id: courseId,
       title,
@@ -483,7 +483,7 @@ function LessonsTab() {
       is_preview: isPreview === "نعم",
       position: (lessons?.length ?? 0) + 1,
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("تمت إضافة الدرس");
     setTitle("");
     setYoutube("");
@@ -491,11 +491,11 @@ function LessonsTab() {
   }
 
   async function addFile() {
-    if (!fileLessonId || !fileTitle || !fileUrl) return toast.error("أكمل بيانات الملف");
+    if (!fileLessonId || !fileTitle || !fileUrl) { toast.error("أكمل بيانات الملف"); return; }
     const { error } = await supabase
       .from("lesson_attachments")
       .insert({ lesson_id: fileLessonId, title: fileTitle, file_url: fileUrl });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("تمت إضافة الملف");
     setFileTitle("");
     setFileUrl("");
@@ -503,7 +503,7 @@ function LessonsTab() {
 
   async function remove(id: string) {
     const { error } = await supabase.from("lessons").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     refresh();
   }
 
@@ -628,18 +628,18 @@ function QuizzesTab() {
   });
 
   async function addQuiz() {
-    if (!courseId || !title) return toast.error("اختر الكورس واكتب عنوان الاختبار");
+    if (!courseId || !title) { toast.error("اختر الكورس واكتب عنوان الاختبار"); return; }
     const { error } = await supabase
       .from("quizzes")
       .insert({ course_id: courseId, title, duration_minutes: Number(duration) || 0 });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("تمت إضافة الاختبار");
     setTitle("");
     refresh();
   }
 
   async function addQuestion() {
-    if (!quizId || !body) return toast.error("اختر الاختبار واكتب نص السؤال");
+    if (!quizId || !body) { toast.error("اختر الاختبار واكتب نص السؤال"); return; }
     const opts =
       qType === "mcq"
         ? options
@@ -659,7 +659,7 @@ function QuizzesTab() {
       teacher_note: note || null,
       position: (questions?.length ?? 0) + 1,
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("تمت إضافة السؤال");
     setBody("");
     setOptions("");
@@ -670,7 +670,7 @@ function QuizzesTab() {
 
   async function removeQuestion(id: string) {
     const { error } = await supabase.from("questions").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     refresh();
   }
 
@@ -797,7 +797,7 @@ function LibraryTab() {
   });
 
   async function addBook() {
-    if (!title || !subject) return toast.error("أكمل عنوان الكتاب والمادة");
+    if (!title || !subject) { toast.error("أكمل عنوان الكتاب والمادة"); return; }
     const { error } = await supabase.from("library_books").insert({
       title,
       subject,
@@ -806,7 +806,7 @@ function LibraryTab() {
       cover_url: cover || null,
       is_published: true,
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("تمت إضافة الكتاب");
     setTitle("");
     setSubject("");
@@ -816,7 +816,7 @@ function LibraryTab() {
   }
 
   async function addChapter() {
-    if (!bookId || !chapterTitle) return toast.error("اختر الكتاب واكتب عنوان الفصل");
+    if (!bookId || !chapterTitle) { toast.error("اختر الكتاب واكتب عنوان الفصل"); return; }
     const { error } = await supabase.from("book_chapters").insert({
       book_id: bookId,
       title: chapterTitle,
@@ -824,7 +824,7 @@ function LibraryTab() {
       solution_youtube_id: solution || null,
       position: (chapters?.length ?? 0) + 1,
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("تمت إضافة الفصل");
     setChapterTitle("");
     setPdfUrl("");
@@ -913,7 +913,7 @@ function StudentsTab() {
       .from("profiles")
       .update({ wallet_balance: Math.round((current + value) * 100) / 100 })
       .eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await supabase
       .from("wallet_transactions")
       .insert({ user_id: id, amount: value, kind: "topup", description: "شحن يدوي من الإدارة" });
@@ -978,12 +978,12 @@ function MarketersTab() {
 
   async function setStatus(id: string, status: string) {
     const { error } = await supabase.from("marketers").update({ status }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     refresh();
   }
 
   async function addPromo() {
-    if (!marketerId || !code) return toast.error("اختر المسوّق واكتب الكود");
+    if (!marketerId || !code) { toast.error("اختر المسوّق واكتب الكود"); return; }
     const { error } = await supabase.from("promo_codes").insert({
       marketer_id: marketerId,
       code: code.trim().toUpperCase(),
@@ -991,7 +991,7 @@ function MarketersTab() {
       commission_percent: Number(commission) || 0,
       is_active: true,
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("تمت إضافة كود الخصم");
     setCode("");
     refresh();
@@ -999,7 +999,7 @@ function MarketersTab() {
 
   async function setPayout(id: string, status: string) {
     const { error } = await supabase.from("payouts").update({ status }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     refresh();
   }
 
