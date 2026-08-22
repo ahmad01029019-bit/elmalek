@@ -45,14 +45,22 @@ function CourseDetail() {
     queryKey: ["course-lessons", courseId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("lessons")
-        .select("id,title,duration_minutes,is_preview,youtube_id,position")
+        .from("course_curriculum")
+        .select("lesson_id,title,duration_minutes,is_preview,preview_youtube_id,position")
         .eq("course_id", courseId)
         .order("position");
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []).map((l) => ({
+        id: l.lesson_id,
+        title: l.title,
+        duration_minutes: l.duration_minutes,
+        is_preview: l.is_preview,
+        youtube_id: l.preview_youtube_id,
+        position: l.position,
+      }));
     },
   });
+
 
   const { data: enrolled } = useQuery({
     queryKey: ["enrolled", courseId, session?.user.id],

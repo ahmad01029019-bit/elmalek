@@ -123,6 +123,54 @@ export type Database = {
           },
         ]
       }
+      course_curriculum: {
+        Row: {
+          course_id: string
+          duration_minutes: number
+          is_preview: boolean
+          lesson_id: string
+          position: number
+          preview_youtube_id: string | null
+          section_id: string | null
+          title: string
+        }
+        Insert: {
+          course_id: string
+          duration_minutes?: number
+          is_preview?: boolean
+          lesson_id: string
+          position?: number
+          preview_youtube_id?: string | null
+          section_id?: string | null
+          title: string
+        }
+        Update: {
+          course_id?: string
+          duration_minutes?: number
+          is_preview?: boolean
+          lesson_id?: string
+          position?: number
+          preview_youtube_id?: string | null
+          section_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_curriculum_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_curriculum_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: true
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_sections: {
         Row: {
           course_id: string
@@ -808,13 +856,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
       app_role: "admin" | "student" | "marketer"
