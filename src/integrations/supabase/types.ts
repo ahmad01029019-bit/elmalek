@@ -123,6 +123,54 @@ export type Database = {
           },
         ]
       }
+      course_curriculum: {
+        Row: {
+          course_id: string
+          duration_minutes: number
+          is_preview: boolean
+          lesson_id: string
+          position: number
+          preview_youtube_id: string | null
+          section_id: string | null
+          title: string
+        }
+        Insert: {
+          course_id: string
+          duration_minutes?: number
+          is_preview?: boolean
+          lesson_id: string
+          position?: number
+          preview_youtube_id?: string | null
+          section_id?: string | null
+          title: string
+        }
+        Update: {
+          course_id?: string
+          duration_minutes?: number
+          is_preview?: boolean
+          lesson_id?: string
+          position?: number
+          preview_youtube_id?: string | null
+          section_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_curriculum_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_curriculum_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: true
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_sections: {
         Row: {
           course_id: string
@@ -267,13 +315,6 @@ export type Database = {
             foreignKeyName: "lesson_attachments_lesson_id_fkey"
             columns: ["lesson_id"]
             isOneToOne: false
-            referencedRelation: "course_curriculum"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "lesson_attachments_lesson_id_fkey"
-            columns: ["lesson_id"]
-            isOneToOne: false
             referencedRelation: "lessons"
             referencedColumns: ["id"]
           },
@@ -307,13 +348,6 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "lesson_progress_lesson_id_fkey"
-            columns: ["lesson_id"]
-            isOneToOne: false
-            referencedRelation: "course_curriculum"
             referencedColumns: ["id"]
           },
           {
@@ -676,13 +710,6 @@ export type Database = {
             foreignKeyName: "quizzes_lesson_id_fkey"
             columns: ["lesson_id"]
             isOneToOne: false
-            referencedRelation: "course_curriculum"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quizzes_lesson_id_fkey"
-            columns: ["lesson_id"]
-            isOneToOne: false
             referencedRelation: "lessons"
             referencedColumns: ["id"]
           },
@@ -826,34 +853,7 @@ export type Database = {
       }
     }
     Views: {
-      course_curriculum: {
-        Row: {
-          course_id: string | null
-          duration_minutes: number | null
-          id: string | null
-          is_preview: boolean | null
-          position: number | null
-          section_id: string | null
-          title: string | null
-          youtube_id: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "lessons_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "lessons_section_id_fkey"
-            columns: ["section_id"]
-            isOneToOne: false
-            referencedRelation: "course_sections"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
       [_ in never]: never
