@@ -4,9 +4,9 @@ import { AppShell } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
-import { useProfile, useSession } from "@/lib/auth";
+import { useIsAdmin, useProfile, useSession } from "@/lib/auth";
 import { formatEGP } from "@/lib/education";
-import { BookOpen, Wallet, Trophy, PlayCircle } from "lucide-react";
+import { BookOpen, Wallet, Trophy, PlayCircle, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -23,6 +23,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 function DashboardPage() {
   const { session } = useSession();
   const { data: profile } = useProfile();
+  const isAdmin = useIsAdmin();
   const uid = session?.user.id;
 
   const { data: enrollments } = useQuery({
