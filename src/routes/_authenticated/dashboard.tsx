@@ -4,9 +4,9 @@ import { AppShell } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
-import { useProfile, useSession } from "@/lib/auth";
+import { useIsAdmin, useProfile, useSession } from "@/lib/auth";
 import { formatEGP } from "@/lib/education";
-import { BookOpen, Wallet, Trophy, PlayCircle } from "lucide-react";
+import { BookOpen, Wallet, Trophy, PlayCircle, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -23,6 +23,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 function DashboardPage() {
   const { session } = useSession();
   const { data: profile } = useProfile();
+  const isAdmin = useIsAdmin();
   const uid = session?.user.id;
 
   const { data: enrollments } = useQuery({
@@ -66,7 +67,20 @@ function DashboardPage() {
 
   return (
     <AppShell title={`أهلًا ${profile?.full_name || "بك"} 👋`}>
+      {isAdmin && (
+        <div className="mb-4 flex flex-col gap-3 rounded-xl border border-border bg-primary-soft p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 text-primary">
+            <Shield className="size-5" />
+            <p className="text-sm font-bold">لديك صلاحية مدير على المنصة</p>
+          </div>
+          <Button asChild size="sm">
+            <Link to="/admin">الدخول إلى لوحة الإدارة</Link>
+          </Button>
+        </div>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-3">
+
         <StatCard
           icon={BookOpen}
           label="كورساتي"
