@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          is_read: boolean
+          kind: string
+          ref_id: string | null
+          title: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          kind?: string
+          ref_id?: string | null
+          title: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          kind?: string
+          ref_id?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       attempt_answers: {
         Row: {
           answer: string | null
@@ -511,6 +541,33 @@ export type Database = {
           },
         ]
       }
+      platform_settings: {
+        Row: {
+          default_commission_percent: number
+          default_discount_percent: number
+          id: number
+          max_uses_per_student: number
+          min_payout_amount: number
+          updated_at: string
+        }
+        Insert: {
+          default_commission_percent?: number
+          default_discount_percent?: number
+          id?: number
+          max_uses_per_student?: number
+          min_payout_amount?: number
+          updated_at?: string
+        }
+        Update: {
+          default_commission_percent?: number
+          default_discount_percent?: number
+          id?: number
+          max_uses_per_student?: number
+          min_payout_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -584,6 +641,35 @@ export type Database = {
             columns: ["marketer_id"]
             isOneToOne: false
             referencedRelation: "marketers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      promo_redemptions: {
+        Row: {
+          created_at: string
+          id: string
+          promo_code_id: string
+          student_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          promo_code_id: string
+          student_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          promo_code_id?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promo_redemptions_promo_code_id_fkey"
+            columns: ["promo_code_id"]
+            isOneToOne: false
+            referencedRelation: "promo_codes"
             referencedColumns: ["id"]
           },
         ]
