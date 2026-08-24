@@ -473,6 +473,83 @@ export type Database = {
         }
         Relationships: []
       }
+      marketer_activity_logs: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          details: string | null
+          id: string
+          marketer_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          details?: string | null
+          id?: string
+          marketer_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          details?: string | null
+          id?: string
+          marketer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketer_activity_logs_marketer_id_fkey"
+            columns: ["marketer_id"]
+            isOneToOne: false
+            referencedRelation: "marketers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketer_offers: {
+        Row: {
+          badge: string | null
+          created_at: string
+          description: string | null
+          gradient: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          link_url: string | null
+          position: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          badge?: string | null
+          created_at?: string
+          description?: string | null
+          gradient?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          link_url?: string | null
+          position?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          badge?: string | null
+          created_at?: string
+          description?: string | null
+          gradient?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          link_url?: string | null
+          position?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       marketers: {
         Row: {
           balance: number
