@@ -22,11 +22,12 @@ export const Route = createFileRoute("/marketers")({
 });
 
 const steps = [
-  { icon: Users, title: "أنشئ حساب مسوّق", text: "سجّل بحساب مسوّق وانتظر اعتماد الإدارة." },
-  { icon: BadgePercent, title: "احصل على كودك", text: "كود خصم خاص بك بنسبة يحددها لك النظام." },
-  { icon: LineChart, title: "سوّق واتابع", text: "تابع عدد المشتركين وأرباحك لحظة بلحظة." },
-  { icon: Wallet, title: "اسحب أرباحك", text: "بعد تجاوز 100 طالب يمكنك طلب السحب من المحفظة." },
+  { icon: Users, title: "أنشئ حساب مسوّق", text: "سجّل بحساب مسوّق ويتم تفعيله تلقائيًا فورًا." },
+  { icon: BadgePercent, title: "اختر كودك بنفسك", text: "اكتب كودك ونتأكد أنه متاح، خصم 10% للطالب." },
+  { icon: LineChart, title: "اربح من أول عملية", text: "عمولة 10% لك على كل عملية شراء بكودك." },
+  { icon: Wallet, title: "اسحب أرباحك", text: "طلب سحب من 1000 ج.م عبر المحفظة أو انستاباي." },
 ];
+
 
 function MarketersPage() {
   const { session } = useSession();
