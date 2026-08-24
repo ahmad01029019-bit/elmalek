@@ -1048,7 +1048,61 @@ function MarketersTab() {
 
   return (
     <div className="space-y-4">
+      <Section title="إعدادات برنامج المسوقين">
+        <div className="grid gap-4 sm:grid-cols-4">
+          <Field label="خصم الطالب الافتراضي %">
+            <Input
+              type="number"
+              dir="ltr"
+              defaultValue={String(settings?.default_discount_percent ?? 10)}
+              onBlur={(e) => saveSettings({ default_discount_percent: Number(e.target.value) })}
+            />
+          </Field>
+          <Field label="عمولة المسوّق الافتراضية %">
+            <Input
+              type="number"
+              dir="ltr"
+              defaultValue={String(settings?.default_commission_percent ?? 10)}
+              onBlur={(e) => saveSettings({ default_commission_percent: Number(e.target.value) })}
+            />
+          </Field>
+          <Field label="الحد الأدنى للسحب (ج.م)">
+            <Input
+              type="number"
+              dir="ltr"
+              defaultValue={String(settings?.min_payout_amount ?? 1000)}
+              onBlur={(e) => saveSettings({ min_payout_amount: Number(e.target.value) })}
+            />
+          </Field>
+          <Field label="عدد مرات استخدام الكود لكل طالب">
+            <Input
+              type="number"
+              dir="ltr"
+              defaultValue={String(settings?.max_uses_per_student ?? 1)}
+              onBlur={(e) => saveSettings({ max_uses_per_student: Number(e.target.value) })}
+            />
+          </Field>
+        </div>
+      </Section>
+
+      <Section title="إشعارات الإدارة">
+        <ul className="divide-y divide-border">
+          {(notifications ?? []).map((n) => (
+            <li key={n.id} className="py-3">
+              <p className="text-sm font-semibold">{n.title}</p>
+              <p className="text-xs text-muted-foreground">
+                {n.body} — {new Date(n.created_at).toLocaleString("ar-EG")}
+              </p>
+            </li>
+          ))}
+          {(notifications ?? []).length === 0 && (
+            <p className="py-3 text-sm text-muted-foreground">لا توجد إشعارات.</p>
+          )}
+        </ul>
+      </Section>
+
       <Section title="حسابات المسوّقين">
+
         <ul className="divide-y divide-border">
           {(marketers ?? []).map((m) => (
             <li key={m.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
