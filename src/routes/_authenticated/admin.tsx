@@ -953,7 +953,13 @@ function StudentsTab() {
 }
 
 function MarketersTab() {
-  const refresh = useRefresh(["admin-marketers", "admin-promos", "admin-payouts"]);
+  const refresh = useRefresh([
+    "admin-marketers",
+    "admin-promos",
+    "admin-payouts",
+    "admin-settings",
+    "admin-notifications",
+  ]);
   const [marketerId, setMarketerId] = useState("");
   const [code, setCode] = useState("");
   const [discount, setDiscount] = useState("10");
@@ -975,6 +981,38 @@ function MarketersTab() {
     queryFn: async () =>
       (await supabase.from("payouts").select("*,marketers(display_name)").order("created_at")).data ?? [],
   });
+
+  const { data: settings } = useQuery({
+    queryKey: ["admin-settings"],
+    queryFn: async () =>
+      (await supabase.from("platform_settings").select("*").eq("id", 1).maybeSingle()).data,
+  });
+
+  const { data: notifications } = useQuery({
+    queryKey: ["admin-notifications"],
+    queryFn: async () =>
+      (
+        await supabase
+          .from("admin_notifications")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(30)
+      ).data ?? [],
+  });
+
+  async function saveSettings(patch: Record<string, number>) {
+    const { error } = await supabase.from("platform_settings").update(patch).eq("id", 1);
+    if (error) { toast.error(error.message); return; }
+    toast.success("تم حفظ الإعدادات");
+    refresh();
+  }
+
+  async function updatePromo(id: string, patch: Record<string, number | boolean>) {
+    const { error } = await supabase.from("promo_codes").update(patch).eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    refresh();
+  }
+
 
   async function setStatus(id: string, status: string) {
     const { error } = await supabase.from("marketers").update({ status }).eq("id", id);
