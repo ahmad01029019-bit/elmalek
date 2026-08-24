@@ -178,3 +178,69 @@ export const requestPayout = createServerFn({ method: "POST" })
 
     return { ok: true, amount };
   });
+
+/** يسجّل نشاط المسوّق لتطّلع عليه الإدارة. */
+export const logMarketerActivity = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) =>
+    z.object({ action: z.string().max(60), details: z.string().max(400).optional() }).parse(data),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: marketer } = await supabaseAdmin
+      .from("marketers")
+      .select("id")
+      .eq("user_id", context.userId)
+      .maybeSingle();
+    if (!marketer) return { ok: false };
+    await supabaseAdmin.from("marketer_activity_logs").insert({
+      marketer_id: marketer.id,
+      actor_user_id: context.userId,
+      action: data.action,
+      details: data.details ?? null,
+    });
+    return { ok: true };
+  });
+
+/** محتوى حساب الطالب التجريبي — متاح للمسوّق فقط. */
+export const demoStudentContent = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) =>
+    z
+      .object({
+        stage: z.string().max(40),
+        track: z.string().max(40).nullable().optional(),
+        eduType: z.string().max(40),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", userId);
+    if (!(roles ?? []).some((r) => r.role === "marketer" || r.role === "admin")) {
+      throw new Error("هذه الميزة متاحة لحسابات المسوّقين فقط");
+    }
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    let q = supabaseAdmin
+      .from("courses")
+      .select("id,title,subject,stage,track,edu_type,price,is_free,cover_url,teachers(name)")
+      .eq("is_published", true)
+      .eq("stage", data.stage)
+      .eq("edu_type", data.eduType)
+      .limit(60);
+    if (data.track) q = q.or(`track.is.null,track.eq.${data.track}`);
+    const { data: courses, error } = await q;
+    if (error) throw new Error(error.message);
+
+    const ids = (courses ?? []).map((c) => c.id);
+    const { data: lessons } = ids.length
+      ? await supabaseAdmin
+          .from("lessons")
+          .select("id,course_id,title,youtube_id,duration_minutes,position")
+          .in("course_id", ids)
+          .order("position")
+      : { data: [] as never[] };
+
+    return { courses: courses ?? [], lessons: lessons ?? [] };
+  });
