@@ -1000,14 +1000,19 @@ function MarketersTab() {
       ).data ?? [],
   });
 
-  async function saveSettings(patch: Record<string, number>) {
+  async function saveSettings(patch: {
+    default_discount_percent?: number;
+    default_commission_percent?: number;
+    min_payout_amount?: number;
+    max_uses_per_student?: number;
+  }) {
     const { error } = await supabase.from("platform_settings").update(patch).eq("id", 1);
     if (error) { toast.error(error.message); return; }
     toast.success("تم حفظ الإعدادات");
     refresh();
   }
 
-  async function updatePromo(id: string, patch: Record<string, number | boolean>) {
+  async function updatePromo(id: string, patch: { discount_percent?: number; commission_percent?: number; is_active?: boolean }) {
     const { error } = await supabase.from("promo_codes").update(patch).eq("id", id);
     if (error) { toast.error(error.message); return; }
     refresh();
