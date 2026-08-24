@@ -1165,15 +1165,44 @@ function MarketersTab() {
         </Button>
         <ul className="mt-4 divide-y divide-border">
           {(promos ?? []).map((p) => (
-            <li key={p.id} className="py-2 text-sm">
+            <li key={p.id} className="flex flex-wrap items-center gap-3 py-3 text-sm">
               <span className="font-bold" dir="ltr">
                 {p.code}
-              </span>{" "}
-              — خصم {p.discount_percent}% — عمولة {p.commission_percent}% — الاستخدامات{" "}
-              {p.uses_count} — {p.marketers?.display_name ?? "—"}
+              </span>
+              <span className="text-muted-foreground">
+                {p.marketers?.display_name ?? "—"} — الاستخدامات {p.uses_count}
+              </span>
+              <span className="flex items-center gap-1">
+                خصم
+                <Input
+                  className="h-8 w-20"
+                  type="number"
+                  dir="ltr"
+                  defaultValue={String(p.discount_percent)}
+                  onBlur={(e) => updatePromo(p.id, { discount_percent: Number(e.target.value) })}
+                />
+              </span>
+              <span className="flex items-center gap-1">
+                عمولة
+                <Input
+                  className="h-8 w-20"
+                  type="number"
+                  dir="ltr"
+                  defaultValue={String(p.commission_percent)}
+                  onBlur={(e) => updatePromo(p.id, { commission_percent: Number(e.target.value) })}
+                />
+              </span>
+              <Button
+                size="sm"
+                variant={p.is_active ? "ghost" : "outline"}
+                onClick={() => updatePromo(p.id, { is_active: !p.is_active })}
+              >
+                {p.is_active ? "إيقاف" : "تفعيل"}
+              </Button>
             </li>
           ))}
         </ul>
+
       </Section>
 
       <Section title="طلبات السحب">
