@@ -953,7 +953,13 @@ function StudentsTab() {
 }
 
 function MarketersTab() {
-  const refresh = useRefresh(["admin-marketers", "admin-promos", "admin-payouts"]);
+  const refresh = useRefresh([
+    "admin-marketers",
+    "admin-promos",
+    "admin-payouts",
+    "admin-settings",
+    "admin-notifications",
+  ]);
   const [marketerId, setMarketerId] = useState("");
   const [code, setCode] = useState("");
   const [discount, setDiscount] = useState("10");
@@ -975,6 +981,43 @@ function MarketersTab() {
     queryFn: async () =>
       (await supabase.from("payouts").select("*,marketers(display_name)").order("created_at")).data ?? [],
   });
+
+  const { data: settings } = useQuery({
+    queryKey: ["admin-settings"],
+    queryFn: async () =>
+      (await supabase.from("platform_settings").select("*").eq("id", 1).maybeSingle()).data,
+  });
+
+  const { data: notifications } = useQuery({
+    queryKey: ["admin-notifications"],
+    queryFn: async () =>
+      (
+        await supabase
+          .from("admin_notifications")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(30)
+      ).data ?? [],
+  });
+
+  async function saveSettings(patch: {
+    default_discount_percent?: number;
+    default_commission_percent?: number;
+    min_payout_amount?: number;
+    max_uses_per_student?: number;
+  }) {
+    const { error } = await supabase.from("platform_settings").update(patch).eq("id", 1);
+    if (error) { toast.error(error.message); return; }
+    toast.success("تم حفظ الإعدادات");
+    refresh();
+  }
+
+  async function updatePromo(id: string, patch: { discount_percent?: number; commission_percent?: number; is_active?: boolean }) {
+    const { error } = await supabase.from("promo_codes").update(patch).eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    refresh();
+  }
+
 
   async function setStatus(id: string, status: string) {
     const { error } = await supabase.from("marketers").update({ status }).eq("id", id);
@@ -998,14 +1041,78 @@ function MarketersTab() {
   }
 
   async function setPayout(id: string, status: string) {
+    const payout = (payouts ?? []).find((p) => p.id === id);
     const { error } = await supabase.from("payouts").update({ status }).eq("id", id);
     if (error) { toast.error(error.message); return; }
+    if (status === "paid" && payout) {
+      const { data: m } = await supabase
+        .from("marketers")
+        .select("balance")
+        .eq("id", payout.marketer_id)
+        .maybeSingle();
+      const next = Math.max(0, Number(m?.balance ?? 0) - Number(payout.amount));
+      await supabase.from("marketers").update({ balance: next }).eq("id", payout.marketer_id);
+    }
     refresh();
   }
 
   return (
     <div className="space-y-4">
+      <Section title="إعدادات برنامج المسوقين">
+        <div className="grid gap-4 sm:grid-cols-4">
+          <Field label="خصم الطالب الافتراضي %">
+            <Input
+              type="number"
+              dir="ltr"
+              defaultValue={String(settings?.default_discount_percent ?? 10)}
+              onBlur={(e) => saveSettings({ default_discount_percent: Number(e.target.value) })}
+            />
+          </Field>
+          <Field label="عمولة المسوّق الافتراضية %">
+            <Input
+              type="number"
+              dir="ltr"
+              defaultValue={String(settings?.default_commission_percent ?? 10)}
+              onBlur={(e) => saveSettings({ default_commission_percent: Number(e.target.value) })}
+            />
+          </Field>
+          <Field label="الحد الأدنى للسحب (ج.م)">
+            <Input
+              type="number"
+              dir="ltr"
+              defaultValue={String(settings?.min_payout_amount ?? 1000)}
+              onBlur={(e) => saveSettings({ min_payout_amount: Number(e.target.value) })}
+            />
+          </Field>
+          <Field label="عدد مرات استخدام الكود لكل طالب">
+            <Input
+              type="number"
+              dir="ltr"
+              defaultValue={String(settings?.max_uses_per_student ?? 1)}
+              onBlur={(e) => saveSettings({ max_uses_per_student: Number(e.target.value) })}
+            />
+          </Field>
+        </div>
+      </Section>
+
+      <Section title="إشعارات الإدارة">
+        <ul className="divide-y divide-border">
+          {(notifications ?? []).map((n) => (
+            <li key={n.id} className="py-3">
+              <p className="text-sm font-semibold">{n.title}</p>
+              <p className="text-xs text-muted-foreground">
+                {n.body} — {new Date(n.created_at).toLocaleString("ar-EG")}
+              </p>
+            </li>
+          ))}
+          {(notifications ?? []).length === 0 && (
+            <p className="py-3 text-sm text-muted-foreground">لا توجد إشعارات.</p>
+          )}
+        </ul>
+      </Section>
+
       <Section title="حسابات المسوّقين">
+
         <ul className="divide-y divide-border">
           {(marketers ?? []).map((m) => (
             <li key={m.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
@@ -1068,15 +1175,44 @@ function MarketersTab() {
         </Button>
         <ul className="mt-4 divide-y divide-border">
           {(promos ?? []).map((p) => (
-            <li key={p.id} className="py-2 text-sm">
+            <li key={p.id} className="flex flex-wrap items-center gap-3 py-3 text-sm">
               <span className="font-bold" dir="ltr">
                 {p.code}
-              </span>{" "}
-              — خصم {p.discount_percent}% — عمولة {p.commission_percent}% — الاستخدامات{" "}
-              {p.uses_count} — {p.marketers?.display_name ?? "—"}
+              </span>
+              <span className="text-muted-foreground">
+                {p.marketers?.display_name ?? "—"} — الاستخدامات {p.uses_count}
+              </span>
+              <span className="flex items-center gap-1">
+                خصم
+                <Input
+                  className="h-8 w-20"
+                  type="number"
+                  dir="ltr"
+                  defaultValue={String(p.discount_percent)}
+                  onBlur={(e) => updatePromo(p.id, { discount_percent: Number(e.target.value) })}
+                />
+              </span>
+              <span className="flex items-center gap-1">
+                عمولة
+                <Input
+                  className="h-8 w-20"
+                  type="number"
+                  dir="ltr"
+                  defaultValue={String(p.commission_percent)}
+                  onBlur={(e) => updatePromo(p.id, { commission_percent: Number(e.target.value) })}
+                />
+              </span>
+              <Button
+                size="sm"
+                variant={p.is_active ? "ghost" : "outline"}
+                onClick={() => updatePromo(p.id, { is_active: !p.is_active })}
+              >
+                {p.is_active ? "إيقاف" : "تفعيل"}
+              </Button>
             </li>
           ))}
         </ul>
+
       </Section>
 
       <Section title="طلبات السحب">
@@ -1085,7 +1221,7 @@ function MarketersTab() {
             <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
               <p className="text-sm">
                 {p.marketers?.display_name ?? "—"} — {formatEGP(Number(p.amount))} — {p.method} —{" "}
-                {p.status}
+                <span dir="ltr">{p.account_ref ?? "—"}</span> — {p.status}
               </p>
               <div className="flex gap-2">
                 <Button size="sm" variant="outline" onClick={() => setPayout(p.id, "paid")}>
