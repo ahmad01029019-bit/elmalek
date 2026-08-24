@@ -1041,8 +1041,18 @@ function MarketersTab() {
   }
 
   async function setPayout(id: string, status: string) {
+    const payout = (payouts ?? []).find((p) => p.id === id);
     const { error } = await supabase.from("payouts").update({ status }).eq("id", id);
     if (error) { toast.error(error.message); return; }
+    if (status === "paid" && payout) {
+      const { data: m } = await supabase
+        .from("marketers")
+        .select("balance")
+        .eq("id", payout.marketer_id)
+        .maybeSingle();
+      const next = Math.max(0, Number(m?.balance ?? 0) - Number(payout.amount));
+      await supabase.from("marketers").update({ balance: next }).eq("id", payout.marketer_id);
+    }
     refresh();
   }
 
@@ -1211,7 +1221,7 @@ function MarketersTab() {
             <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
               <p className="text-sm">
                 {p.marketers?.display_name ?? "—"} — {formatEGP(Number(p.amount))} — {p.method} —{" "}
-                {p.status}
+                <span dir="ltr">{p.account_ref ?? "—"}</span> — {p.status}
               </p>
               <div className="flex gap-2">
                 <Button size="sm" variant="outline" onClick={() => setPayout(p.id, "paid")}>
