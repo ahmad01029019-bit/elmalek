@@ -11,7 +11,6 @@ import {
   Library,
   User,
   Shield,
-  BadgePercent,
   LogOut,
   Menu,
   X,
@@ -42,7 +41,6 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const isAdmin = (roles ?? []).includes("admin");
-  const isMarketer = (roles ?? []).includes("marketer");
 
   async function signOut() {
     await qc.cancelQueries();
