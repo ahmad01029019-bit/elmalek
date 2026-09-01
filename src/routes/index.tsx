@@ -76,14 +76,6 @@ function Index() {
             >
               <Link to="/courses">تصفح الكورسات</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
-            >
-              <Link to="/marketers">انضم كمسوّق</Link>
-            </Button>
           </div>
           <div className="mt-10 flex flex-wrap gap-2 text-xs">
             {[...STAGES, ...EDU_TYPES].map((s) => (

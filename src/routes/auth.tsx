@@ -18,7 +18,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { useSession } from "@/lib/auth";
 
 const searchSchema = z.object({
-  mode: z.enum(["login", "signup", "marketer"]).catch("login"),
+  mode: z.enum(["login", "signup"]).catch("login"),
 });
 
 export const Route = createFileRoute("/auth")({
@@ -60,7 +60,6 @@ function AuthPage() {
   }, [session, navigate]);
 
   const isSignup = mode !== "login";
-  const isMarketer = mode === "marketer";
   const isPrep = stage.includes("الإعدادي");
 
   async function handleForgotPassword() {
@@ -88,10 +87,10 @@ function AuthPage() {
             data: {
               full_name: fullName,
               phone,
-              stage: isMarketer ? null : stage,
-              track: isMarketer || isPrep ? null : track,
-              edu_type: isMarketer ? null : eduType,
-              role: isMarketer ? "marketer" : "student",
+              stage,
+              track: isPrep ? null : track,
+              edu_type: eduType,
+              role: "student",
             },
           },
         });
@@ -126,12 +125,10 @@ function AuthPage() {
       <div className="mx-auto max-w-lg px-4 py-10">
         <div className="rounded-2xl card-soft p-6">
           <h1 className="text-2xl font-bold">
-            {isMarketer ? "تسجيل مسوّق جديد" : isSignup ? "إنشاء حساب طالب" : "تسجيل الدخول"}
+            {isSignup ? "إنشاء حساب طالب" : "تسجيل الدخول"}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {isMarketer
-              ? "أنشئ حسابك كمسوّق واحصل على كود خصم خاص بك."
-              : "ادخل إلى حسابك لمتابعة كورساتك واختباراتك."}
+            ادخل إلى حسابك لمتابعة كورساتك واختباراتك.
           </p>
 
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
@@ -185,7 +182,7 @@ function AuthPage() {
               </div>
             )}
 
-            {isSignup && !isMarketer && (
+            {isSignup && (
               <div className={`grid gap-4 ${isPrep ? "sm:grid-cols-2" : "sm:grid-cols-3"}`}>
                 <PickField label="الصف" value={stage} onChange={setStage} options={stages} />
                 {!isPrep && (

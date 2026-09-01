@@ -11,7 +11,6 @@ import {
   Library,
   User,
   Shield,
-  BadgePercent,
   LogOut,
   Menu,
   X,
@@ -42,7 +41,6 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const isAdmin = (roles ?? []).includes("admin");
-  const isMarketer = (roles ?? []).includes("marketer");
 
   async function signOut() {
     await qc.cancelQueries();
@@ -88,19 +86,6 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
         );
       })}
 
-      {isMarketer && (
-        <Link
-          to="/marketer"
-          onClick={() => setOpen(false)}
-          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
-            pathname === "/marketer"
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-          }`}
-        >
-          <BadgePercent className="size-4" /> لوحة المسوّق
-        </Link>
-      )}
 
       {isAdmin && (
         <Link

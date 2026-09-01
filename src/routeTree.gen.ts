@@ -11,11 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as MarketerRouteRouteImport } from './routes/_marketer/route'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FaqRouteImport } from './routes/faq'
-import { Route as MarketersRouteImport } from './routes/marketers'
+import { Route as MarketerPortalRouteImport } from './routes/marketer-portal'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TermsRouteImport } from './routes/terms'
@@ -23,12 +24,12 @@ import { Route as VisionRouteImport } from './routes/vision'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedMarketerRouteImport } from './routes/_authenticated/marketer'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedRecordsRouteImport } from './routes/_authenticated/records'
 import { Route as AuthenticatedStatsRouteImport } from './routes/_authenticated/stats'
 import { Route as AuthenticatedSubjectsRouteImport } from './routes/_authenticated/subjects'
 import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated/wallet'
+import { Route as MarketerMarketerRouteImport } from './routes/_marketer/marketer'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
 import { Route as LearnCourseIdRouteImport } from './routes/learn.$courseId'
@@ -45,6 +46,10 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketerRouteRoute = MarketerRouteRouteImport.update({
+  id: '/_marketer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -67,9 +72,9 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MarketersRoute = MarketersRouteImport.update({
-  id: '/marketers',
-  path: '/marketers',
+const MarketerPortalRoute = MarketerPortalRouteImport.update({
+  id: '/marketer-portal',
+  path: '/marketer-portal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -107,11 +112,6 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedMarketerRoute = AuthenticatedMarketerRouteImport.update({
-  id: '/marketer',
-  path: '/marketer',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -136,6 +136,11 @@ const AuthenticatedWalletRoute = AuthenticatedWalletRouteImport.update({
   id: '/wallet',
   path: '/wallet',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const MarketerMarketerRoute = MarketerMarketerRouteImport.update({
+  id: '/marketer',
+  path: '/marketer',
+  getParentRoute: () => MarketerRouteRoute,
 } as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
@@ -184,7 +189,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
-  '/marketers': typeof MarketersRoute
+  '/marketer-portal': typeof MarketerPortalRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
@@ -192,12 +197,12 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/marketer': typeof AuthenticatedMarketerRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/records': typeof AuthenticatedRecordsRoute
   '/stats': typeof AuthenticatedStatsRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
   '/wallet': typeof AuthenticatedWalletRoute
+  '/marketer': typeof MarketerMarketerRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/learn/$courseId': typeof LearnCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
@@ -213,7 +218,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
-  '/marketers': typeof MarketersRoute
+  '/marketer-portal': typeof MarketerPortalRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
@@ -221,12 +226,12 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/marketer': typeof AuthenticatedMarketerRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/records': typeof AuthenticatedRecordsRoute
   '/stats': typeof AuthenticatedStatsRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
   '/wallet': typeof AuthenticatedWalletRoute
+  '/marketer': typeof MarketerMarketerRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/learn/$courseId': typeof LearnCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
@@ -240,11 +245,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_marketer': typeof MarketerRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
-  '/marketers': typeof MarketersRoute
+  '/marketer-portal': typeof MarketerPortalRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
@@ -252,12 +258,12 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/marketer': typeof AuthenticatedMarketerRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/records': typeof AuthenticatedRecordsRoute
   '/_authenticated/stats': typeof AuthenticatedStatsRoute
   '/_authenticated/subjects': typeof AuthenticatedSubjectsRoute
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
+  '/_marketer/marketer': typeof MarketerMarketerRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/learn/$courseId': typeof LearnCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
@@ -275,7 +281,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/faq'
-    | '/marketers'
+    | '/marketer-portal'
     | '/privacy'
     | '/reset-password'
     | '/terms'
@@ -283,12 +289,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/cart'
     | '/dashboard'
-    | '/marketer'
     | '/profile'
     | '/records'
     | '/stats'
     | '/subjects'
     | '/wallet'
+    | '/marketer'
     | '/courses/$courseId'
     | '/learn/$courseId'
     | '/library/$bookId'
@@ -304,7 +310,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/faq'
-    | '/marketers'
+    | '/marketer-portal'
     | '/privacy'
     | '/reset-password'
     | '/terms'
@@ -312,12 +318,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/cart'
     | '/dashboard'
-    | '/marketer'
     | '/profile'
     | '/records'
     | '/stats'
     | '/subjects'
     | '/wallet'
+    | '/marketer'
     | '/courses/$courseId'
     | '/learn/$courseId'
     | '/library/$bookId'
@@ -330,11 +336,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/_marketer'
     | '/about'
     | '/auth'
     | '/contact'
     | '/faq'
-    | '/marketers'
+    | '/marketer-portal'
     | '/privacy'
     | '/reset-password'
     | '/terms'
@@ -342,12 +349,12 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/cart'
     | '/_authenticated/dashboard'
-    | '/_authenticated/marketer'
     | '/_authenticated/profile'
     | '/_authenticated/records'
     | '/_authenticated/stats'
     | '/_authenticated/subjects'
     | '/_authenticated/wallet'
+    | '/_marketer/marketer'
     | '/courses/$courseId'
     | '/learn/$courseId'
     | '/library/$bookId'
@@ -361,11 +368,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  MarketerRouteRoute: typeof MarketerRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
-  MarketersRoute: typeof MarketersRoute
+  MarketerPortalRoute: typeof MarketerPortalRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TermsRoute: typeof TermsRoute
@@ -393,6 +401,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_marketer': {
+      id: '/_marketer'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof MarketerRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -423,11 +438,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/marketers': {
-      id: '/marketers'
-      path: '/marketers'
-      fullPath: '/marketers'
-      preLoaderRoute: typeof MarketersRouteImport
+    '/marketer-portal': {
+      id: '/marketer-portal'
+      path: '/marketer-portal'
+      fullPath: '/marketer-portal'
+      preLoaderRoute: typeof MarketerPortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -479,13 +494,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/marketer': {
-      id: '/_authenticated/marketer'
-      path: '/marketer'
-      fullPath: '/marketer'
-      preLoaderRoute: typeof AuthenticatedMarketerRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
       path: '/profile'
@@ -520,6 +528,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/wallet'
       preLoaderRoute: typeof AuthenticatedWalletRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_marketer/marketer': {
+      id: '/_marketer/marketer'
+      path: '/marketer'
+      fullPath: '/marketer'
+      preLoaderRoute: typeof MarketerMarketerRouteImport
+      parentRoute: typeof MarketerRouteRoute
     }
     '/courses/': {
       id: '/courses/'
@@ -584,7 +599,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedMarketerRoute: typeof AuthenticatedMarketerRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedRecordsRoute: typeof AuthenticatedRecordsRoute
   AuthenticatedStatsRoute: typeof AuthenticatedStatsRoute
@@ -597,7 +611,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedMarketerRoute: AuthenticatedMarketerRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedRecordsRoute: AuthenticatedRecordsRoute,
   AuthenticatedStatsRoute: AuthenticatedStatsRoute,
@@ -609,14 +622,27 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface MarketerRouteRouteChildren {
+  MarketerMarketerRoute: typeof MarketerMarketerRoute
+}
+
+const MarketerRouteRouteChildren: MarketerRouteRouteChildren = {
+  MarketerMarketerRoute: MarketerMarketerRoute,
+}
+
+const MarketerRouteRouteWithChildren = MarketerRouteRoute._addFileChildren(
+  MarketerRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  MarketerRouteRoute: MarketerRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
-  MarketersRoute: MarketersRoute,
+  MarketerPortalRoute: MarketerPortalRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TermsRoute: TermsRoute,
