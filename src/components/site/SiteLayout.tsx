@@ -9,7 +9,6 @@ const nav = [
   { to: "/courses", label: "الكورسات" },
   { to: "/teachers", label: "المعلمون" },
   { to: "/library", label: "مكتبة الملك" },
-  { to: "/marketers", label: "المسوقون" },
   { to: "/about", label: "من نحن" },
   { to: "/contact", label: "تواصل معنا" },
 ] as const;

@@ -14,7 +14,7 @@ import {
   Wallet,
   X,
 } from "lucide-react";
-import { AppShell } from "@/components/app/AppShell";
+import { MarketerShell } from "@/components/marketer/MarketerShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -124,7 +124,7 @@ function MarketerPage() {
   const refresh = () => qc.invalidateQueries();
 
   return (
-    <AppShell title="لوحة المسوّق">
+    <MarketerShell title="لوحة المسوّق">
       <section className="overflow-hidden rounded-3xl surface-gradient p-6 text-primary-foreground sm:p-8">
         <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs backdrop-blur">
           <Sparkles className="size-3.5" /> برنامج المسوّقين
@@ -190,7 +190,7 @@ function MarketerPage() {
           </ul>
         )}
       </section>
-    </AppShell>
+    </MarketerShell>
   );
 }
 
