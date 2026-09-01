@@ -95,7 +95,7 @@ function AuthPage() {
           },
         });
         if (error) throw error;
-        toast.success("تم إنشاء الحساب. تفقّد بريدك لتأكيد التسجيل ثم سجّل الدخول.");
+        toast.success("تم إنشاء الحساب وتسجيل الدخول مباشرة. أهلًا بك!");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
