@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as MarketerRouteRouteImport } from './routes/_marketer/route'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -45,6 +46,10 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketerRouteRoute = MarketerRouteRouteImport.update({
+  id: '/_marketer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -133,9 +138,9 @@ const AuthenticatedWalletRoute = AuthenticatedWalletRouteImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const MarketerMarketerRoute = MarketerMarketerRouteImport.update({
-  id: '/_marketer/marketer',
+  id: '/marketer',
   path: '/marketer',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MarketerRouteRoute,
 } as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
@@ -240,6 +245,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_marketer': typeof MarketerRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
@@ -330,6 +336,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/_marketer'
     | '/about'
     | '/auth'
     | '/contact'
@@ -361,6 +368,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  MarketerRouteRoute: typeof MarketerRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
@@ -370,7 +378,6 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   TermsRoute: typeof TermsRoute
   VisionRoute: typeof VisionRoute
-  MarketerMarketerRoute: typeof MarketerMarketerRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
   LearnCourseIdRoute: typeof LearnCourseIdRoute
   LibraryBookIdRoute: typeof LibraryBookIdRoute
@@ -394,6 +401,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_marketer': {
+      id: '/_marketer'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof MarketerRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -520,7 +534,7 @@ declare module '@tanstack/react-router' {
       path: '/marketer'
       fullPath: '/marketer'
       preLoaderRoute: typeof MarketerMarketerRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof MarketerRouteRoute
     }
     '/courses/': {
       id: '/courses/'
@@ -608,9 +622,22 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface MarketerRouteRouteChildren {
+  MarketerMarketerRoute: typeof MarketerMarketerRoute
+}
+
+const MarketerRouteRouteChildren: MarketerRouteRouteChildren = {
+  MarketerMarketerRoute: MarketerMarketerRoute,
+}
+
+const MarketerRouteRouteWithChildren = MarketerRouteRoute._addFileChildren(
+  MarketerRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  MarketerRouteRoute: MarketerRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
@@ -620,7 +647,6 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   TermsRoute: TermsRoute,
   VisionRoute: VisionRoute,
-  MarketerMarketerRoute: MarketerMarketerRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
   LearnCourseIdRoute: LearnCourseIdRoute,
   LibraryBookIdRoute: LibraryBookIdRoute,
