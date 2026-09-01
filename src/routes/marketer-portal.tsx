@@ -57,7 +57,7 @@ function MarketerPortalPage() {
           },
         });
         if (error) throw error;
-        toast.success("تم إنشاء حساب المسوّق. أكّد بريدك ثم سجّل الدخول من هنا.");
+        toast.success("تم إنشاء حساب المسوّق. سجّل الدخول من هنا مباشرة.");
         setTab("login");
         return;
       }
