@@ -1112,6 +1112,24 @@ function MarketersTab() {
       </Section>
 
       <Section title="حسابات المسوّقين">
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl bg-primary-soft p-3">
+          <p className="text-sm text-muted-foreground">
+            رابط بوابة المسوّقين (شاركه مع المسوّقين فقط):
+          </p>
+          <code dir="ltr" className="rounded bg-card px-2 py-1 text-xs">
+            /marketer-portal
+          </code>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              navigator.clipboard.writeText(`${window.location.origin}/marketer-portal`);
+              toast.success("تم نسخ رابط بوابة المسوّقين");
+            }}
+          >
+            نسخ الرابط
+          </Button>
+        </div>
 
         <ul className="divide-y divide-border">
           {(marketers ?? []).map((m) => (
