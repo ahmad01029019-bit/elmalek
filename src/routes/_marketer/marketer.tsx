@@ -31,7 +31,7 @@ import { useProfile, useSession } from "@/lib/auth";
 import { formatEGP } from "@/lib/education";
 import { checkPromoCode, claimPromoCode, requestPayout } from "@/lib/marketer.functions";
 
-export const Route = createFileRoute("/_authenticated/marketer")({
+export const Route = createFileRoute("/_marketer/marketer")({
   head: () => ({
     meta: [
       { title: "لوحة المسوق | منصة المُلك" },
