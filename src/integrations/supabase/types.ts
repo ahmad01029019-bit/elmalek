@@ -508,6 +508,72 @@ export type Database = {
           },
         ]
       }
+      marketer_email_otps: {
+        Row: {
+          attempts: number
+          code: string
+          consumed_at: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          purpose: string
+        }
+        Insert: {
+          attempts?: number
+          code: string
+          consumed_at?: string | null
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+          purpose?: string
+        }
+        Update: {
+          attempts?: number
+          code?: string
+          consumed_at?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          purpose?: string
+        }
+        Relationships: []
+      }
+      marketer_levels: {
+        Row: {
+          commission_percent: number
+          created_at: string
+          level: number
+          max_students: number | null
+          min_students: number
+          name: string
+          shield: string | null
+          updated_at: string
+        }
+        Insert: {
+          commission_percent: number
+          created_at?: string
+          level: number
+          max_students?: number | null
+          min_students: number
+          name: string
+          shield?: string | null
+          updated_at?: string
+        }
+        Update: {
+          commission_percent?: number
+          created_at?: string
+          level?: number
+          max_students?: number | null
+          min_students?: number
+          name?: string
+          shield?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       marketer_offers: {
         Row: {
           badge: string | null
@@ -554,27 +620,42 @@ export type Database = {
         Row: {
           balance: number
           created_at: string
+          discount_offset: number
           display_name: string
           id: string
+          level: number
+          lifetime_students: number
           phone: string | null
+          season_students: number
+          season_year: string | null
           status: string
           user_id: string
         }
         Insert: {
           balance?: number
           created_at?: string
+          discount_offset?: number
           display_name?: string
           id?: string
+          level?: number
+          lifetime_students?: number
           phone?: string | null
+          season_students?: number
+          season_year?: string | null
           status?: string
           user_id: string
         }
         Update: {
           balance?: number
           created_at?: string
+          discount_offset?: number
           display_name?: string
           id?: string
+          level?: number
+          lifetime_students?: number
           phone?: string | null
+          season_students?: number
+          season_year?: string | null
           status?: string
           user_id?: string
         }
@@ -620,27 +701,36 @@ export type Database = {
       }
       platform_settings: {
         Row: {
+          academic_year_start_month: number
           default_commission_percent: number
           default_discount_percent: number
           id: number
+          max_offset_percent: number
           max_uses_per_student: number
           min_payout_amount: number
+          repeat_commission_percent: number
           updated_at: string
         }
         Insert: {
+          academic_year_start_month?: number
           default_commission_percent?: number
           default_discount_percent?: number
           id?: number
+          max_offset_percent?: number
           max_uses_per_student?: number
           min_payout_amount?: number
+          repeat_commission_percent?: number
           updated_at?: string
         }
         Update: {
+          academic_year_start_month?: number
           default_commission_percent?: number
           default_discount_percent?: number
           id?: number
+          max_offset_percent?: number
           max_uses_per_student?: number
           min_payout_amount?: number
+          repeat_commission_percent?: number
           updated_at?: string
         }
         Relationships: []
@@ -724,18 +814,21 @@ export type Database = {
       }
       promo_redemptions: {
         Row: {
+          academic_year: string | null
           created_at: string
           id: string
           promo_code_id: string
           student_id: string
         }
         Insert: {
+          academic_year?: string | null
           created_at?: string
           id?: string
           promo_code_id: string
           student_id: string
         }
         Update: {
+          academic_year?: string | null
           created_at?: string
           id?: string
           promo_code_id?: string
@@ -880,31 +973,40 @@ export type Database = {
       }
       referrals: {
         Row: {
+          academic_year: string | null
           amount: number
           commission: number
           course_id: string
           created_at: string
           id: string
+          is_new_customer: boolean
+          level_at_time: number | null
           marketer_id: string
           promo_code_id: string
           student_id: string
         }
         Insert: {
+          academic_year?: string | null
           amount?: number
           commission?: number
           course_id: string
           created_at?: string
           id?: string
+          is_new_customer?: boolean
+          level_at_time?: number | null
           marketer_id: string
           promo_code_id: string
           student_id: string
         }
         Update: {
+          academic_year?: string | null
           amount?: number
           commission?: number
           course_id?: string
           created_at?: string
           id?: string
+          is_new_customer?: boolean
+          level_at_time?: number | null
           marketer_id?: string
           promo_code_id?: string
           student_id?: string
