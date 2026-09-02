@@ -244,3 +244,156 @@ export const demoStudentContent = createServerFn({ method: "POST" })
 
     return { courses: courses ?? [], lessons: lessons ?? [] };
   });
+
+/* ===================== تحقق البريد الإلكتروني (OTP) ===================== */
+
+const emailSchema = z.string().trim().email().max(255);
+
+/**
+ * يُنشئ كود تحقق للمسوّق ويخزّنه، وجاهز للربط بخدمة إرسال البريد لاحقًا.
+ * حاليًا (بدون خدمة بريد مربوطة) يُعاد الكود في الاستجابة لتستمر التجربة.
+ */
+export const sendMarketerOtp = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ email: emailSchema }).parse(data))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const email = data.email.toLowerCase();
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const expires = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+
+    const { error } = await supabaseAdmin
+      .from("marketer_email_otps")
+      .insert({ email, code, expires_at: expires, purpose: "marketer_signup" });
+    if (error) throw new Error("تعذر إنشاء كود التحقق، حاول مرة أخرى");
+
+    // نقطة الربط المستقبلية بخدمة إرسال البريد:
+    const apiKey = process.env["EMAIL_API_KEY"];
+    if (apiKey) {
+      // TODO: استدعاء مزوّد البريد الفعلي هنا وإرسال code إلى email.
+      return { ok: true, delivered: true as const, devCode: null as string | null };
+    }
+
+    return { ok: true, delivered: false as const, devCode: code };
+  });
+
+/** يتحقق من صحة كود البريد المرسل للمسوّق. */
+export const verifyMarketerOtp = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) =>
+    z.object({ email: emailSchema, code: z.string().trim().length(6) }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const email = data.email.toLowerCase();
+    const { data: row } = await supabaseAdmin
+      .from("marketer_email_otps")
+      .select("id,code,expires_at,consumed_at,attempts")
+      .eq("email", email)
+      .eq("purpose", "marketer_signup")
+      .is("consumed_at", null)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (!row) throw new Error("لم يتم إرسال كود لهذا البريد، اطلب كودًا جديدًا");
+    if (new Date(row.expires_at).getTime() < Date.now()) throw new Error("انتهت صلاحية الكود، اطلب كودًا جديدًا");
+    if ((row.attempts ?? 0) >= 5) throw new Error("تجاوزت عدد المحاولات المسموح بها");
+
+    if (row.code !== data.code.trim()) {
+      await supabaseAdmin
+        .from("marketer_email_otps")
+        .update({ attempts: (row.attempts ?? 0) + 1 })
+        .eq("id", row.id);
+      throw new Error("كود التحقق غير صحيح");
+    }
+
+    await supabaseAdmin
+      .from("marketer_email_otps")
+      .update({ consumed_at: new Date().toISOString() })
+      .eq("id", row.id);
+
+    return { ok: true };
+  });
+
+/* ===================== إعدادات المسوّق ===================== */
+
+/** يعدّل إزاحة الخصم الخاصة بالمسوّق ضمن الحد الآمن للمنصة. */
+export const updateMarketerOffset = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => z.object({ offset: z.number().min(-20).max(20) }).parse(data))
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: settings } = await supabaseAdmin
+      .from("platform_settings")
+      .select("max_offset_percent")
+      .eq("id", 1)
+      .maybeSingle();
+    const max = Number(settings?.max_offset_percent ?? 5);
+    const offset = Math.round(data.offset * 100) / 100;
+    if (Math.abs(offset) > max) throw new Error(`أقصى إزاحة مسموح بها ± ${max}%`);
+
+    const { data: marketer } = await supabaseAdmin
+      .from("marketers")
+      .select("id")
+      .eq("user_id", context.userId)
+      .maybeSingle();
+    if (!marketer) throw new Error("لا يوجد حساب مسوّق مرتبط بحسابك");
+
+    const { error } = await supabaseAdmin
+      .from("marketers")
+      .update({ discount_offset: offset })
+      .eq("id", marketer.id);
+    if (error) throw new Error(error.message);
+
+    await supabaseAdmin.from("marketer_activity_logs").insert({
+      marketer_id: marketer.id,
+      actor_user_id: context.userId,
+      action: "تعديل إزاحة الخصم",
+      details: `الإزاحة الجديدة ${offset}%`,
+    });
+
+    return { ok: true, offset };
+  });
+
+/** يغيّر كود المسوّق الحالي إلى كود جديد متاح. */
+export const changePromoCode = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => z.object({ code: z.string() }).parse(data))
+  .handler(async ({ data, context }) => {
+    const parsed = codeSchema.safeParse(data.code);
+    if (!parsed.success) throw new Error("صيغة الكود غير صحيحة (حروف إنجليزية وأرقام من 3 إلى 20)");
+    const code = parsed.data.toUpperCase();
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: marketer } = await supabaseAdmin
+      .from("marketers")
+      .select("id")
+      .eq("user_id", context.userId)
+      .maybeSingle();
+    if (!marketer) throw new Error("لا يوجد حساب مسوّق مرتبط بحسابك");
+
+    const { data: taken } = await supabaseAdmin
+      .from("promo_codes")
+      .select("id")
+      .eq("code", code)
+      .maybeSingle();
+    if (taken) throw new Error("هذا الكود مستخدم بالفعل، جرّب كودًا آخر");
+
+    const { data: mine } = await supabaseAdmin
+      .from("promo_codes")
+      .select("id,code")
+      .eq("marketer_id", marketer.id)
+      .maybeSingle();
+    if (!mine) throw new Error("لا يوجد كود لتغييره، أنشئ كودك أولًا");
+
+    const { error } = await supabaseAdmin.from("promo_codes").update({ code }).eq("id", mine.id);
+    if (error) throw new Error(error.message);
+
+    await supabaseAdmin.from("marketer_activity_logs").insert({
+      marketer_id: marketer.id,
+      actor_user_id: context.userId,
+      action: "تغيير كود الخصم",
+      details: `من ${mine.code} إلى ${code}`,
+    });
+
+    return { ok: true, code };
+  });
