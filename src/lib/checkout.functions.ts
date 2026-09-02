@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { academicYearLabel, levelForCount, type MarketerLevel } from "@/lib/marketer-levels";
 
 export const checkoutCart = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -19,6 +20,18 @@ export const checkoutCart = createServerFn({ method: "POST" })
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+    const { data: settings } = await supabaseAdmin
+      .from("platform_settings")
+      .select(
+        "max_uses_per_student,academic_year_start_month,repeat_commission_percent,default_discount_percent",
+      )
+      .eq("id", 1)
+      .maybeSingle();
+
+    const year = academicYearLabel(Number(settings?.academic_year_start_month ?? 9));
+    const maxUses = Number(settings?.max_uses_per_student ?? 5);
+    const repeatPercent = Number(settings?.repeat_commission_percent ?? 10);
+
     let promo: {
       id: string;
       marketer_id: string | null;
@@ -26,6 +39,14 @@ export const checkoutCart = createServerFn({ method: "POST" })
       commission_percent: number;
       uses_count: number;
     } | null = null;
+    let marketerRow: {
+      id: string;
+      balance: number;
+      season_students: number;
+      season_year: string | null;
+      discount_offset: number;
+    } | null = null;
+    let isNewCustomer = true;
 
     const rawCode = data.code?.trim();
     if (rawCode) {
@@ -38,24 +59,64 @@ export const checkoutCart = createServerFn({ method: "POST" })
         .maybeSingle();
       if (!found) throw new Error("كود الخصم غير صالح");
 
-      const { data: settings } = await supabaseAdmin
-        .from("platform_settings")
-        .select("max_uses_per_student")
-        .eq("id", 1)
-        .maybeSingle();
-      const maxUses = Number(settings?.max_uses_per_student ?? 1);
-
-      const { count } = await supabaseAdmin
+      // حد الاستخدام: 5 محاولات للطالب في العام الدراسي الواحد
+      const { count: yearUses } = await supabaseAdmin
         .from("promo_redemptions")
         .select("id", { count: "exact", head: true })
-        .eq("promo_code_id", found.id)
+        .eq("student_id", userId)
+        .eq("academic_year", year);
+      if ((yearUses ?? 0) >= maxUses) {
+        throw new Error(`لقد استنفدت عدد مرات استخدام أكواد الخصم (${maxUses}) لهذا العام الدراسي`);
+      }
+
+      // عميل جديد تمامًا = لم يسبق له استخدام أي كود من قبل
+      const { count: everUsed } = await supabaseAdmin
+        .from("promo_redemptions")
+        .select("id", { count: "exact", head: true })
         .eq("student_id", userId);
-      if ((count ?? 0) >= maxUses) throw new Error("لقد استخدمت هذا الكود من قبل");
+      isNewCustomer = (everUsed ?? 0) === 0;
+
+      if (found.marketer_id) {
+        const { data: m } = await supabaseAdmin
+          .from("marketers")
+          .select("id,balance,season_students,season_year,discount_offset,status")
+          .eq("id", found.marketer_id)
+          .maybeSingle();
+        if (m && m.status === "suspended") throw new Error("هذا الكود موقوف حاليًا");
+        if (m) {
+          marketerRow = {
+            id: m.id,
+            balance: Number(m.balance ?? 0),
+            season_students: m.season_year === year ? Number(m.season_students ?? 0) : 0,
+            season_year: m.season_year,
+            discount_offset: Number(m.discount_offset ?? 0),
+          };
+        }
+      }
 
       promo = found;
     }
 
-    const discount = promo?.discount_percent ?? 0;
+    // خصم الطالب = خصم الكود + إزاحة المسوّق
+    const discount = promo
+      ? Math.max(0, Math.min(90, Number(promo.discount_percent) + (marketerRow?.discount_offset ?? 0)))
+      : 0;
+
+    // نسبة عمولة المسوّق: مستواه الحالي للعميل الجديد، ونسبة ثابتة للعميل المتكرر
+    let levels: MarketerLevel[] = [];
+    let commissionPercent = Number(promo?.commission_percent ?? 0);
+    let currentLevel = 1;
+    if (marketerRow) {
+      const { data: lv } = await supabaseAdmin
+        .from("marketer_levels")
+        .select("level,name,min_students,max_students,commission_percent,shield")
+        .order("level");
+      levels = (lv ?? []) as MarketerLevel[];
+      const lvl = levelForCount(levels, marketerRow.season_students);
+      currentLevel = lvl?.level ?? 1;
+      commissionPercent = isNewCustomer ? Number(lvl?.commission_percent ?? commissionPercent) : repeatPercent;
+    }
+
     let total = 0;
     for (const item of cart) {
       const price = item.courses?.is_free ? 0 : Number(item.courses?.price ?? 0);
@@ -75,8 +136,8 @@ export const checkoutCart = createServerFn({ method: "POST" })
     if (promo) {
       const { error: redeemErr } = await supabaseAdmin
         .from("promo_redemptions")
-        .insert({ promo_code_id: promo.id, student_id: userId });
-      if (redeemErr) throw new Error("لقد استخدمت هذا الكود من قبل");
+        .insert({ promo_code_id: promo.id, student_id: userId, academic_year: year });
+      if (redeemErr) throw new Error("تعذر تسجيل استخدام الكود، حاول مرة أخرى");
     }
 
     let totalCommission = 0;
@@ -91,7 +152,7 @@ export const checkoutCart = createServerFn({ method: "POST" })
       if (enrollErr && !enrollErr.message.includes("duplicate")) throw new Error(enrollErr.message);
 
       if (promo?.marketer_id) {
-        const commission = Math.round(((paid * promo.commission_percent) / 100) * 100) / 100;
+        const commission = Math.round(((paid * commissionPercent) / 100) * 100) / 100;
         totalCommission += commission;
         await supabaseAdmin.from("referrals").insert({
           marketer_id: promo.marketer_id,
@@ -100,6 +161,9 @@ export const checkoutCart = createServerFn({ method: "POST" })
           course_id: item.course_id,
           amount: paid,
           commission,
+          academic_year: year,
+          is_new_customer: isNewCustomer,
+          level_at_time: currentLevel,
         });
       }
     }
@@ -122,18 +186,32 @@ export const checkoutCart = createServerFn({ method: "POST" })
         .update({ uses_count: promo.uses_count + cart.length })
         .eq("id", promo.id);
 
-      if (promo.marketer_id && totalCommission > 0) {
-        const { data: marketer } = await supabaseAdmin
+      if (marketerRow) {
+        // العدّاد يرتفع لكل عملية شراء (جديد أو متكرر) كتحفيز، ويتصفّر مع بداية عام دراسي جديد
+        const nextCount = marketerRow.season_students + 1;
+        const nextLevel = levelForCount(levels, nextCount)?.level ?? currentLevel;
+        await supabaseAdmin
           .from("marketers")
-          .select("balance")
-          .eq("id", promo.marketer_id)
-          .maybeSingle();
-        const next = Math.round((Number(marketer?.balance ?? 0) + totalCommission) * 100) / 100;
-        await supabaseAdmin.from("marketers").update({ balance: next }).eq("id", promo.marketer_id);
+          .update({
+            balance: Math.round((marketerRow.balance + totalCommission) * 100) / 100,
+            season_students: nextCount,
+            season_year: year,
+            level: nextLevel,
+          })
+          .eq("id", marketerRow.id);
+
+        if (nextLevel > currentLevel) {
+          await supabaseAdmin.from("admin_notifications").insert({
+            kind: "marketer_level_up",
+            title: "مسوّق ترقّى لمستوى جديد",
+            body: `المسوّق ${marketerRow.id} وصل إلى المستوى ${nextLevel} برصيد ${nextCount} طالب`,
+            ref_id: marketerRow.id,
+          });
+        }
       }
     }
 
     await supabase.from("cart_items").delete().eq("student_id", userId);
 
-    return { ok: true, total, count: cart.length };
+    return { ok: true, total, count: cart.length, discount, isNewCustomer };
   });
