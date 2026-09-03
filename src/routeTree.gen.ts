@@ -29,7 +29,6 @@ import { Route as AuthenticatedRecordsRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedStatsRouteImport } from './routes/_authenticated/stats'
 import { Route as AuthenticatedSubjectsRouteImport } from './routes/_authenticated/subjects'
 import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated/wallet'
-import { Route as MarketerMarketerRouteImport } from './routes/_marketer/marketer'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses.$courseId'
 import { Route as LearnCourseIdRouteImport } from './routes/learn.$courseId'
@@ -38,6 +37,7 @@ import { Route as LibraryBookIdRouteImport } from './routes/library.$bookId'
 import { Route as TeachersIndexRouteImport } from './routes/teachers.index'
 import { Route as TeachersSlugRouteImport } from './routes/teachers.$slug'
 import { Route as AuthenticatedQuizQuizIdRouteImport } from './routes/_authenticated/quiz.$quizId'
+import { Route as MarketerMarketerIndexRouteImport } from './routes/_marketer/marketer.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -137,11 +137,6 @@ const AuthenticatedWalletRoute = AuthenticatedWalletRouteImport.update({
   path: '/wallet',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const MarketerMarketerRoute = MarketerMarketerRouteImport.update({
-  id: '/marketer',
-  path: '/marketer',
-  getParentRoute: () => MarketerRouteRoute,
-} as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
@@ -182,6 +177,11 @@ const AuthenticatedQuizQuizIdRoute = AuthenticatedQuizQuizIdRouteImport.update({
   path: '/quiz/$quizId',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const MarketerMarketerIndexRoute = MarketerMarketerIndexRouteImport.update({
+  id: '/marketer/',
+  path: '/marketer/',
+  getParentRoute: () => MarketerRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -202,7 +202,6 @@ export interface FileRoutesByFullPath {
   '/stats': typeof AuthenticatedStatsRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
   '/wallet': typeof AuthenticatedWalletRoute
-  '/marketer': typeof MarketerMarketerRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/learn/$courseId': typeof LearnCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
@@ -211,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/library/': typeof LibraryIndexRoute
   '/teachers/': typeof TeachersIndexRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/marketer/': typeof MarketerMarketerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -231,7 +231,6 @@ export interface FileRoutesByTo {
   '/stats': typeof AuthenticatedStatsRoute
   '/subjects': typeof AuthenticatedSubjectsRoute
   '/wallet': typeof AuthenticatedWalletRoute
-  '/marketer': typeof MarketerMarketerRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/learn/$courseId': typeof LearnCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
@@ -240,6 +239,7 @@ export interface FileRoutesByTo {
   '/library': typeof LibraryIndexRoute
   '/teachers': typeof TeachersIndexRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/marketer': typeof MarketerMarketerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -263,7 +263,6 @@ export interface FileRoutesById {
   '/_authenticated/stats': typeof AuthenticatedStatsRoute
   '/_authenticated/subjects': typeof AuthenticatedSubjectsRoute
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
-  '/_marketer/marketer': typeof MarketerMarketerRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/learn/$courseId': typeof LearnCourseIdRoute
   '/library/$bookId': typeof LibraryBookIdRoute
@@ -272,6 +271,7 @@ export interface FileRoutesById {
   '/library/': typeof LibraryIndexRoute
   '/teachers/': typeof TeachersIndexRoute
   '/_authenticated/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/_marketer/marketer/': typeof MarketerMarketerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -294,7 +294,6 @@ export interface FileRouteTypes {
     | '/stats'
     | '/subjects'
     | '/wallet'
-    | '/marketer'
     | '/courses/$courseId'
     | '/learn/$courseId'
     | '/library/$bookId'
@@ -303,6 +302,7 @@ export interface FileRouteTypes {
     | '/library/'
     | '/teachers/'
     | '/quiz/$quizId'
+    | '/marketer/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -323,7 +323,6 @@ export interface FileRouteTypes {
     | '/stats'
     | '/subjects'
     | '/wallet'
-    | '/marketer'
     | '/courses/$courseId'
     | '/learn/$courseId'
     | '/library/$bookId'
@@ -332,6 +331,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/teachers'
     | '/quiz/$quizId'
+    | '/marketer'
   id:
     | '__root__'
     | '/'
@@ -354,7 +354,6 @@ export interface FileRouteTypes {
     | '/_authenticated/stats'
     | '/_authenticated/subjects'
     | '/_authenticated/wallet'
-    | '/_marketer/marketer'
     | '/courses/$courseId'
     | '/learn/$courseId'
     | '/library/$bookId'
@@ -363,6 +362,7 @@ export interface FileRouteTypes {
     | '/library/'
     | '/teachers/'
     | '/_authenticated/quiz/$quizId'
+    | '/_marketer/marketer/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -529,13 +529,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWalletRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_marketer/marketer': {
-      id: '/_marketer/marketer'
-      path: '/marketer'
-      fullPath: '/marketer'
-      preLoaderRoute: typeof MarketerMarketerRouteImport
-      parentRoute: typeof MarketerRouteRoute
-    }
     '/courses/': {
       id: '/courses/'
       path: '/courses'
@@ -592,6 +585,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedQuizQuizIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_marketer/marketer/': {
+      id: '/_marketer/marketer/'
+      path: '/marketer'
+      fullPath: '/marketer/'
+      preLoaderRoute: typeof MarketerMarketerIndexRouteImport
+      parentRoute: typeof MarketerRouteRoute
+    }
   }
 }
 
@@ -623,11 +623,11 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface MarketerRouteRouteChildren {
-  MarketerMarketerRoute: typeof MarketerMarketerRoute
+  MarketerMarketerIndexRoute: typeof MarketerMarketerIndexRoute
 }
 
 const MarketerRouteRouteChildren: MarketerRouteRouteChildren = {
-  MarketerMarketerRoute: MarketerMarketerRoute,
+  MarketerMarketerIndexRoute: MarketerMarketerIndexRoute,
 }
 
 const MarketerRouteRouteWithChildren = MarketerRouteRoute._addFileChildren(
