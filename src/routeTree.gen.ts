@@ -38,6 +38,7 @@ import { Route as TeachersIndexRouteImport } from './routes/teachers.index'
 import { Route as TeachersSlugRouteImport } from './routes/teachers.$slug'
 import { Route as AuthenticatedQuizQuizIdRouteImport } from './routes/_authenticated/quiz.$quizId'
 import { Route as MarketerMarketerIndexRouteImport } from './routes/_marketer/marketer.index'
+import { Route as MarketerMarketerLinksRouteImport } from './routes/_marketer/marketer.links'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -182,6 +183,11 @@ const MarketerMarketerIndexRoute = MarketerMarketerIndexRouteImport.update({
   path: '/marketer/',
   getParentRoute: () => MarketerRouteRoute,
 } as any)
+const MarketerMarketerLinksRoute = MarketerMarketerLinksRouteImport.update({
+  id: '/marketer/links',
+  path: '/marketer/links',
+  getParentRoute: () => MarketerRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -210,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/library/': typeof LibraryIndexRoute
   '/teachers/': typeof TeachersIndexRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/marketer/links': typeof MarketerMarketerLinksRoute
   '/marketer/': typeof MarketerMarketerIndexRoute
 }
 export interface FileRoutesByTo {
@@ -239,6 +246,7 @@ export interface FileRoutesByTo {
   '/library': typeof LibraryIndexRoute
   '/teachers': typeof TeachersIndexRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/marketer/links': typeof MarketerMarketerLinksRoute
   '/marketer': typeof MarketerMarketerIndexRoute
 }
 export interface FileRoutesById {
@@ -271,6 +279,7 @@ export interface FileRoutesById {
   '/library/': typeof LibraryIndexRoute
   '/teachers/': typeof TeachersIndexRoute
   '/_authenticated/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/_marketer/marketer/links': typeof MarketerMarketerLinksRoute
   '/_marketer/marketer/': typeof MarketerMarketerIndexRoute
 }
 export interface FileRouteTypes {
@@ -302,6 +311,7 @@ export interface FileRouteTypes {
     | '/library/'
     | '/teachers/'
     | '/quiz/$quizId'
+    | '/marketer/links'
     | '/marketer/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -331,6 +341,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/teachers'
     | '/quiz/$quizId'
+    | '/marketer/links'
     | '/marketer'
   id:
     | '__root__'
@@ -362,6 +373,7 @@ export interface FileRouteTypes {
     | '/library/'
     | '/teachers/'
     | '/_authenticated/quiz/$quizId'
+    | '/_marketer/marketer/links'
     | '/_marketer/marketer/'
   fileRoutesById: FileRoutesById
 }
@@ -592,6 +604,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketerMarketerIndexRouteImport
       parentRoute: typeof MarketerRouteRoute
     }
+    '/_marketer/marketer/links': {
+      id: '/_marketer/marketer/links'
+      path: '/marketer/links'
+      fullPath: '/marketer/links'
+      preLoaderRoute: typeof MarketerMarketerLinksRouteImport
+      parentRoute: typeof MarketerRouteRoute
+    }
   }
 }
 
@@ -623,10 +642,12 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface MarketerRouteRouteChildren {
+  MarketerMarketerLinksRoute: typeof MarketerMarketerLinksRoute
   MarketerMarketerIndexRoute: typeof MarketerMarketerIndexRoute
 }
 
 const MarketerRouteRouteChildren: MarketerRouteRouteChildren = {
+  MarketerMarketerLinksRoute: MarketerMarketerLinksRoute,
   MarketerMarketerIndexRoute: MarketerMarketerIndexRoute,
 }
 
