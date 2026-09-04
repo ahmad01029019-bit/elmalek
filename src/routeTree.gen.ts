@@ -38,6 +38,7 @@ import { Route as TeachersIndexRouteImport } from './routes/teachers.index'
 import { Route as TeachersSlugRouteImport } from './routes/teachers.$slug'
 import { Route as AuthenticatedQuizQuizIdRouteImport } from './routes/_authenticated/quiz.$quizId'
 import { Route as MarketerMarketerIndexRouteImport } from './routes/_marketer/marketer.index'
+import { Route as MarketerMarketerEarningsRouteImport } from './routes/_marketer/marketer.earnings'
 import { Route as MarketerMarketerLinksRouteImport } from './routes/_marketer/marketer.links'
 import { Route as MarketerMarketerReportsRouteImport } from './routes/_marketer/marketer.reports'
 
@@ -184,6 +185,12 @@ const MarketerMarketerIndexRoute = MarketerMarketerIndexRouteImport.update({
   path: '/marketer/',
   getParentRoute: () => MarketerRouteRoute,
 } as any)
+const MarketerMarketerEarningsRoute =
+  MarketerMarketerEarningsRouteImport.update({
+    id: '/marketer/earnings',
+    path: '/marketer/earnings',
+    getParentRoute: () => MarketerRouteRoute,
+  } as any)
 const MarketerMarketerLinksRoute = MarketerMarketerLinksRouteImport.update({
   id: '/marketer/links',
   path: '/marketer/links',
@@ -222,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/library/': typeof LibraryIndexRoute
   '/teachers/': typeof TeachersIndexRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/marketer/earnings': typeof MarketerMarketerEarningsRoute
   '/marketer/links': typeof MarketerMarketerLinksRoute
   '/marketer/reports': typeof MarketerMarketerReportsRoute
   '/marketer/': typeof MarketerMarketerIndexRoute
@@ -253,6 +261,7 @@ export interface FileRoutesByTo {
   '/library': typeof LibraryIndexRoute
   '/teachers': typeof TeachersIndexRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/marketer/earnings': typeof MarketerMarketerEarningsRoute
   '/marketer/links': typeof MarketerMarketerLinksRoute
   '/marketer/reports': typeof MarketerMarketerReportsRoute
   '/marketer': typeof MarketerMarketerIndexRoute
@@ -287,6 +296,7 @@ export interface FileRoutesById {
   '/library/': typeof LibraryIndexRoute
   '/teachers/': typeof TeachersIndexRoute
   '/_authenticated/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/_marketer/marketer/earnings': typeof MarketerMarketerEarningsRoute
   '/_marketer/marketer/links': typeof MarketerMarketerLinksRoute
   '/_marketer/marketer/reports': typeof MarketerMarketerReportsRoute
   '/_marketer/marketer/': typeof MarketerMarketerIndexRoute
@@ -320,6 +330,7 @@ export interface FileRouteTypes {
     | '/library/'
     | '/teachers/'
     | '/quiz/$quizId'
+    | '/marketer/earnings'
     | '/marketer/links'
     | '/marketer/reports'
     | '/marketer/'
@@ -351,6 +362,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/teachers'
     | '/quiz/$quizId'
+    | '/marketer/earnings'
     | '/marketer/links'
     | '/marketer/reports'
     | '/marketer'
@@ -384,6 +396,7 @@ export interface FileRouteTypes {
     | '/library/'
     | '/teachers/'
     | '/_authenticated/quiz/$quizId'
+    | '/_marketer/marketer/earnings'
     | '/_marketer/marketer/links'
     | '/_marketer/marketer/reports'
     | '/_marketer/marketer/'
@@ -616,6 +629,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketerMarketerIndexRouteImport
       parentRoute: typeof MarketerRouteRoute
     }
+    '/_marketer/marketer/earnings': {
+      id: '/_marketer/marketer/earnings'
+      path: '/marketer/earnings'
+      fullPath: '/marketer/earnings'
+      preLoaderRoute: typeof MarketerMarketerEarningsRouteImport
+      parentRoute: typeof MarketerRouteRoute
+    }
     '/_marketer/marketer/links': {
       id: '/_marketer/marketer/links'
       path: '/marketer/links'
@@ -661,12 +681,14 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface MarketerRouteRouteChildren {
+  MarketerMarketerEarningsRoute: typeof MarketerMarketerEarningsRoute
   MarketerMarketerLinksRoute: typeof MarketerMarketerLinksRoute
   MarketerMarketerReportsRoute: typeof MarketerMarketerReportsRoute
   MarketerMarketerIndexRoute: typeof MarketerMarketerIndexRoute
 }
 
 const MarketerRouteRouteChildren: MarketerRouteRouteChildren = {
+  MarketerMarketerEarningsRoute: MarketerMarketerEarningsRoute,
   MarketerMarketerLinksRoute: MarketerMarketerLinksRoute,
   MarketerMarketerReportsRoute: MarketerMarketerReportsRoute,
   MarketerMarketerIndexRoute: MarketerMarketerIndexRoute,
