@@ -41,6 +41,7 @@ import { Route as MarketerMarketerIndexRouteImport } from './routes/_marketer/ma
 import { Route as MarketerMarketerEarningsRouteImport } from './routes/_marketer/marketer.earnings'
 import { Route as MarketerMarketerLinksRouteImport } from './routes/_marketer/marketer.links'
 import { Route as MarketerMarketerReportsRouteImport } from './routes/_marketer/marketer.reports'
+import { Route as MarketerMarketerSettingsRouteImport } from './routes/_marketer/marketer.settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -201,6 +202,12 @@ const MarketerMarketerReportsRoute = MarketerMarketerReportsRouteImport.update({
   path: '/marketer/reports',
   getParentRoute: () => MarketerRouteRoute,
 } as any)
+const MarketerMarketerSettingsRoute =
+  MarketerMarketerSettingsRouteImport.update({
+    id: '/marketer/settings',
+    path: '/marketer/settings',
+    getParentRoute: () => MarketerRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -232,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/marketer/earnings': typeof MarketerMarketerEarningsRoute
   '/marketer/links': typeof MarketerMarketerLinksRoute
   '/marketer/reports': typeof MarketerMarketerReportsRoute
+  '/marketer/settings': typeof MarketerMarketerSettingsRoute
   '/marketer/': typeof MarketerMarketerIndexRoute
 }
 export interface FileRoutesByTo {
@@ -264,6 +272,7 @@ export interface FileRoutesByTo {
   '/marketer/earnings': typeof MarketerMarketerEarningsRoute
   '/marketer/links': typeof MarketerMarketerLinksRoute
   '/marketer/reports': typeof MarketerMarketerReportsRoute
+  '/marketer/settings': typeof MarketerMarketerSettingsRoute
   '/marketer': typeof MarketerMarketerIndexRoute
 }
 export interface FileRoutesById {
@@ -299,6 +308,7 @@ export interface FileRoutesById {
   '/_marketer/marketer/earnings': typeof MarketerMarketerEarningsRoute
   '/_marketer/marketer/links': typeof MarketerMarketerLinksRoute
   '/_marketer/marketer/reports': typeof MarketerMarketerReportsRoute
+  '/_marketer/marketer/settings': typeof MarketerMarketerSettingsRoute
   '/_marketer/marketer/': typeof MarketerMarketerIndexRoute
 }
 export interface FileRouteTypes {
@@ -333,6 +343,7 @@ export interface FileRouteTypes {
     | '/marketer/earnings'
     | '/marketer/links'
     | '/marketer/reports'
+    | '/marketer/settings'
     | '/marketer/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -365,6 +376,7 @@ export interface FileRouteTypes {
     | '/marketer/earnings'
     | '/marketer/links'
     | '/marketer/reports'
+    | '/marketer/settings'
     | '/marketer'
   id:
     | '__root__'
@@ -399,6 +411,7 @@ export interface FileRouteTypes {
     | '/_marketer/marketer/earnings'
     | '/_marketer/marketer/links'
     | '/_marketer/marketer/reports'
+    | '/_marketer/marketer/settings'
     | '/_marketer/marketer/'
   fileRoutesById: FileRoutesById
 }
@@ -650,6 +663,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketerMarketerReportsRouteImport
       parentRoute: typeof MarketerRouteRoute
     }
+    '/_marketer/marketer/settings': {
+      id: '/_marketer/marketer/settings'
+      path: '/marketer/settings'
+      fullPath: '/marketer/settings'
+      preLoaderRoute: typeof MarketerMarketerSettingsRouteImport
+      parentRoute: typeof MarketerRouteRoute
+    }
   }
 }
 
@@ -684,6 +704,7 @@ interface MarketerRouteRouteChildren {
   MarketerMarketerEarningsRoute: typeof MarketerMarketerEarningsRoute
   MarketerMarketerLinksRoute: typeof MarketerMarketerLinksRoute
   MarketerMarketerReportsRoute: typeof MarketerMarketerReportsRoute
+  MarketerMarketerSettingsRoute: typeof MarketerMarketerSettingsRoute
   MarketerMarketerIndexRoute: typeof MarketerMarketerIndexRoute
 }
 
@@ -691,6 +712,7 @@ const MarketerRouteRouteChildren: MarketerRouteRouteChildren = {
   MarketerMarketerEarningsRoute: MarketerMarketerEarningsRoute,
   MarketerMarketerLinksRoute: MarketerMarketerLinksRoute,
   MarketerMarketerReportsRoute: MarketerMarketerReportsRoute,
+  MarketerMarketerSettingsRoute: MarketerMarketerSettingsRoute,
   MarketerMarketerIndexRoute: MarketerMarketerIndexRoute,
 }
 
