@@ -1131,27 +1131,129 @@ function MarketersTab() {
           </Button>
         </div>
 
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-secondary/60 text-xs text-muted-foreground">
+              <tr>
+                <th className="p-2 text-start">المسوّق</th>
+                <th className="p-2 text-start">الحالة</th>
+                <th className="p-2 text-start">الرصيد</th>
+                <th className="p-2 text-start">طلاب الموسم</th>
+                <th className="p-2 text-start">المستوى</th>
+                <th className="p-2 text-start">إزاحة الخصم %</th>
+                <th className="p-2 text-start">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(marketers ?? []).map((m) => (
+                <tr key={m.id} className="border-t border-border">
+                  <td className="p-2 font-semibold">{m.display_name}</td>
+                  <td className="p-2 text-xs text-muted-foreground">
+                    {m.status === "suspended" ? "موقوف" : "نشط"}
+                  </td>
+                  <td className="p-2">{formatEGP(Number(m.balance ?? 0))}</td>
+                  <td className="p-2">
+                    <Input
+                      className="h-8 w-20"
+                      type="number"
+                      dir="ltr"
+                      defaultValue={String(m.season_students ?? 0)}
+                      onBlur={(e) => updateMarketer(m.id, { season_students: Number(e.target.value) })}
+                    />
+                  </td>
+                  <td className="p-2">
+                    <Input
+                      className="h-8 w-16"
+                      type="number"
+                      dir="ltr"
+                      defaultValue={String(m.level ?? 1)}
+                      onBlur={(e) => updateMarketer(m.id, { level: Number(e.target.value) })}
+                    />
+                  </td>
+                  <td className="p-2">
+                    <Input
+                      className="h-8 w-20"
+                      type="number"
+                      dir="ltr"
+                      defaultValue={String(m.discount_offset ?? 0)}
+                      onBlur={(e) => updateMarketer(m.id, { discount_offset: Number(e.target.value) })}
+                    />
+                  </td>
+                  <td className="p-2">
+                    <div className="flex gap-1">
+                      <Button size="sm" variant="outline" onClick={() => setStatus(m.id, "approved")}>
+                        تفعيل
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => setStatus(m.id, "suspended")}>
+                        إيقاف
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => removeMarketer(m.id)}>
+                        حذف
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {(marketers ?? []).length === 0 && (
+                <tr>
+                  <td colSpan={7} className="p-4 text-center text-muted-foreground">
+                    لا يوجد مسوّقون بعد.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
+      <Section title="مستويات العمولة">
         <ul className="divide-y divide-border">
-          {(marketers ?? []).map((m) => (
-            <li key={m.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
-              <div>
-                <p className="font-semibold">{m.display_name}</p>
-                <p className="text-xs text-muted-foreground">الحالة: {m.status}</p>
-              </div>
-              <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => setStatus(m.id, "approved")}>
-                  اعتماد
-                </Button>
-                <Button size="sm" variant="ghost" onClick={() => setStatus(m.id, "suspended")}>
-                  إيقاف
-                </Button>
-              </div>
+          {(levels ?? []).map((l) => (
+            <li key={l.level} className="flex flex-wrap items-center gap-3 py-2 text-sm">
+              <span className="w-40 font-semibold">
+                {l.level}. {l.name}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                من {l.min_students} {l.max_students ? `إلى ${l.max_students}` : "فأكثر"}
+              </span>
+              <span className="flex items-center gap-1">
+                عمولة
+                <Input
+                  className="h-8 w-20"
+                  type="number"
+                  dir="ltr"
+                  defaultValue={String(l.commission_percent)}
+                  onBlur={async (e) => {
+                    await supabase
+                      .from("marketer_levels")
+                      .update({ commission_percent: Number(e.target.value) })
+                      .eq("level", l.level);
+                    refresh();
+                  }}
+                />
+                %
+              </span>
+              {l.shield && <span className="text-xs">🏆 {l.shield}</span>}
             </li>
           ))}
-          {(marketers ?? []).length === 0 && (
-            <p className="py-3 text-sm text-muted-foreground">لا يوجد مسوّقون بعد.</p>
+        </ul>
+      </Section>
+
+      <Section title="سجل نشاط المسوّقين">
+        <ul className="divide-y divide-border">
+          {(logs ?? []).map((l) => (
+            <li key={l.id} className="py-2 text-sm">
+              <p className="font-semibold">{l.action}</p>
+              <p className="text-xs text-muted-foreground">
+                {l.details} — {new Date(l.created_at).toLocaleString("ar-EG")}
+              </p>
+            </li>
+          ))}
+          {(logs ?? []).length === 0 && (
+            <p className="py-2 text-sm text-muted-foreground">لا يوجد نشاط مسجّل.</p>
           )}
         </ul>
+
       </Section>
 
       <Section title="أكواد الخصم">
