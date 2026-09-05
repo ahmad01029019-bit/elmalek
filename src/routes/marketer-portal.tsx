@@ -1,11 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { BadgePercent, LineChart, Lock, Wallet } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { BadgePercent, Eye, EyeOff, LineChart, Lock, Wallet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { sendMarketerOtp, verifyMarketerOtp } from "@/lib/marketer.functions";
+
 
 export const Route = createFileRoute("/marketer-portal")({
   head: () => ({
@@ -40,14 +43,63 @@ function MarketerPortalPage() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCountdown, setOtpCountdown] = useState(0);
+
+  const sendOtp = useServerFn(sendMarketerOtp);
+  const verifyOtp = useServerFn(verifyMarketerOtp);
+
+
+  function startOtpCountdown() {
+    setOtpCountdown(60);
+    const timer = setInterval(() => {
+      setOtpCountdown((c) => {
+        if (c <= 1) clearInterval(timer);
+        return Math.max(0, c - 1);
+      });
+    }, 1000);
+  }
+
+  async function handleSendOtp() {
+    if (!email) {
+      toast.error("اكتب بريدك الإلكتروني أولًا");
+      return;
+    }
+    setLoading(true);
+    try {
+      const result = await sendOtp({ data: { email } });
+
+      setOtpSent(true);
+      startOtpCountdown();
+      if (result.delivered) {
+        toast.success("تم إرسال كود التحقق إلى بريدك");
+      } else {
+        toast.success(`كود التحقق التجريبي: ${result.devCode}`);
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "تعذّر إرسال كود التحقق");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     try {
       if (tab === "signup") {
+        if (!otpSent) {
+          toast.error("أرسل كود التحقق إلى بريدك أولًا");
+          setLoading(false);
+          return;
+        }
+        await verifyOtp({ data: { email, code: otp } });
+
+
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -56,14 +108,28 @@ function MarketerPortalPage() {
             data: { full_name: fullName, phone, role: "marketer" },
           },
         });
-        if (error) throw error;
-        toast.success("تم إنشاء حساب المسوّق. سجّل الدخول من هنا مباشرة.");
-        setTab("login");
+        if (error) {
+          if (error.message.includes("already registered")) {
+            toast.error("هذا البريد مسجّل بالفعل. سجّل الدخول بدلًا من ذلك.");
+          } else {
+            toast.error(error.message);
+          }
+          return;
+        }
+        toast.success("تم إنشاء حساب المسوّق وتسجيل الدخول. أهلًا بك!");
+        navigate({ to: "/marketer", replace: true });
         return;
       }
 
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      if (error) {
+        if (error.message.toLowerCase().includes("invalid login")) {
+          toast.error("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+        } else {
+          toast.error(error.message);
+        }
+        return;
+      }
 
       const { data: roles } = await supabase
         .from("user_roles")
@@ -80,7 +146,7 @@ function MarketerPortalPage() {
       toast.success("أهلًا بك في بوابة المسوّقين");
       navigate({ to: "/marketer", replace: true });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "حدث خطأ غير متوقع");
+      toast.error(err instanceof Error ? err.message : "حدث خطأ غير متوقع، حاول مرة أخرى");
     } finally {
       setLoading(false);
     }
@@ -121,7 +187,12 @@ function MarketerPortalPage() {
               <button
                 key={t}
                 type="button"
-                onClick={() => setTab(t)}
+                onClick={() => {
+                  setTab(t);
+                  setOtpSent(false);
+                  setOtp("");
+                  setOtpCountdown(0);
+                }}
                 className={`flex-1 rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
                   tab === t
                     ? "bg-primary text-primary-foreground"
@@ -171,18 +242,60 @@ function MarketerPortalPage() {
                 maxLength={255}
               />
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="mp-password">كلمة المرور</Label>
-              <Input
-                id="mp-password"
-                type="password"
-                dir="ltr"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-              />
+              <div className="relative">
+                <Input
+                  id="mp-password"
+                  type={showPassword ? "text" : "password"}
+                  dir="ltr"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
+                  aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+                >
+                  {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                </button>
+              </div>
             </div>
+
+            {tab === "signup" && (
+              <div className="space-y-2">
+                <Label htmlFor="mp-otp">كود التحقق من البريد</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="mp-otp"
+                    dir="ltr"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    placeholder="000000"
+                    maxLength={6}
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={loading || otpCountdown > 0}
+                    onClick={handleSendOtp}
+                  >
+                    {otpCountdown > 0 ? `${otpCountdown} ث` : otpSent ? "إعادة الإرسال" : "أرسل الكود"}
+                  </Button>
+                </div>
+                {otpSent && (
+                  <p className="text-xs text-muted-foreground">
+                    أدخل الكود المكون من 6 أرقام المرسل إلى بريدك.
+                  </p>
+                )}
+              </div>
+            )}
 
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "جارٍ التنفيذ..." : tab === "login" ? "دخول المسوّق" : "إنشاء حساب مسوّق"}
