@@ -13,9 +13,11 @@ export const Route = createFileRoute("/_marketer")({
       .eq("user_id", data.user.id);
 
     const isMarketer = (roles ?? []).some((r) => r.role === "marketer");
-    if (!isMarketer) throw redirect({ to: "/dashboard" });
+    const isAdmin = (roles ?? []).some((r) => r.role === "admin");
+    if (!isMarketer && !isAdmin) throw redirect({ to: "/dashboard" });
 
-    return { user: data.user };
+    return { user: data.user, isAdminView: isAdmin && !isMarketer };
   },
   component: () => <Outlet />,
 });
+
