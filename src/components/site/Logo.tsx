@@ -1,28 +1,18 @@
-import logoAsset from "@/assets/elmalek-logo.jpg.asset.json";
+import logoAsset from "@/assets/elmalek-m.png.asset.json";
 
 /**
- * شعار منصة المُلك (ElMalek).
- * يُعرض داخل بطاقة بيضاء مدوّرة لتبقى الهوية واضحة في الوضعين الفاتح والغامق،
- * مع حلقة خفيفة تفصلها عن الخلفيات الداكنة.
+ * شعار منصة المُلك (ElMalek) — حرف M أزرق مفرّغ بدون خلفية أو إطار،
+ * يملأ المساحة المخصصة له ويظهر بوضوح في الوضعين الفاتح والغامق.
  */
 export function LogoMark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
-  const dims =
-    size === "sm"
-      ? "size-8 rounded-lg p-0.5"
-      : size === "lg"
-        ? "size-12 rounded-2xl p-1"
-        : "size-9 rounded-xl p-1";
+  const dims = size === "sm" ? "h-8" : size === "lg" ? "h-12" : "h-9";
   return (
-    <span
-      className={`flex shrink-0 items-center justify-center overflow-hidden bg-white shadow-sm ring-1 ring-border/60 ${dims}`}
-    >
-      <img
-        src={logoAsset.url}
-        alt="شعار منصة المُلك"
-        className="size-full object-contain"
-        loading="eager"
-        decoding="async"
-      />
-    </span>
+    <img
+      src={logoAsset.url}
+      alt="شعار منصة المُلك"
+      className={`${dims} w-auto shrink-0 object-contain`}
+      loading="eager"
+      decoding="async"
+    />
   );
 }
