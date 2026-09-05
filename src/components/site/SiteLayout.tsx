@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { Menu, X, GraduationCap } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth";
+import { LogoMark } from "@/components/site/Logo";
 
 const nav = [
   { to: "/", label: "الرئيسية" },
