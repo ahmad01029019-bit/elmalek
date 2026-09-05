@@ -1006,6 +1006,25 @@ function MarketersTab() {
       ).data ?? [],
   });
 
+  const { data: levels } = useQuery({
+    queryKey: ["admin-marketer-levels"],
+    queryFn: async () =>
+      (await supabase.from("marketer_levels").select("*").order("level")).data ?? [],
+  });
+
+  const { data: logs } = useQuery({
+    queryKey: ["admin-marketer-logs"],
+    queryFn: async () =>
+      (
+        await supabase
+          .from("marketer_activity_logs")
+          .select("*, marketers(display_name)")
+          .order("created_at", { ascending: false })
+          .limit(50)
+      ).data ?? [],
+  });
+
+
   async function saveSettings(patch: {
     default_discount_percent?: number;
     default_commission_percent?: number;
