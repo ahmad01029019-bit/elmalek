@@ -2,14 +2,14 @@ import logoAsset from "@/assets/elmalek-m.png.asset.json";
 
 /**
  * شعار منصة المُلك (ElMalek) — حرف M أزرق مفرّغ بدون خلفية أو إطار،
- * يملأ المساحة المخصصة له ويظهر بوضوح في الوضعين الفاتح والغامق.
+ * بحجم متناسق مع النص المجاور وواضح في الوضعين الفاتح والغامق.
  */
 export function LogoMark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
-  const dims = size === "sm" ? "h-8" : size === "lg" ? "h-12" : "h-9";
+  const dims = size === "sm" ? "h-5" : size === "lg" ? "h-7" : "h-6";
   return (
     <img
       src={logoAsset.url}
-      alt="شعار منصة المُلك"
+      alt="ElMalek"
       className={`${dims} w-auto shrink-0 object-contain`}
       loading="eager"
       decoding="async"
