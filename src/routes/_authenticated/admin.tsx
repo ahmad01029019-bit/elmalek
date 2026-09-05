@@ -1465,7 +1465,7 @@ function OffersTab() {
     refresh();
   }
 
-  function edit(o: (typeof offers)[number]) {
+  function edit(o: NonNullable<typeof offers>[number]) {
     setEditing(o.id);
     setTitle(o.title);
     setDescription(o.description ?? "");
@@ -1475,6 +1475,7 @@ function OffersTab() {
     setGradient(o.gradient);
     setPosition(String(o.position));
   }
+
 
   return (
     <div className="space-y-4">
