@@ -52,9 +52,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
   const sidebar = (
     <nav className="flex h-full flex-col gap-1 p-3">
       <Link to="/" className="mb-3 flex items-center gap-2 px-2 py-2">
-        <span className="flex size-9 items-center justify-center rounded-xl surface-gradient text-primary-foreground">
-          <GraduationCap className="size-5" />
-        </span>
+        <LogoMark />
         <span className="font-display font-bold">منصة المُلك</span>
       </Link>
 

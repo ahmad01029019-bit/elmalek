@@ -23,9 +23,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-40 border-b border-border bg-card/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
-            <span className="flex size-9 items-center justify-center rounded-xl surface-gradient text-primary-foreground">
-              <GraduationCap className="size-5" />
-            </span>
+            <LogoMark />
             <span className="font-display text-lg font-bold">منصة المُلك</span>
           </Link>
 
@@ -96,9 +94,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="flex size-8 items-center justify-center rounded-lg surface-gradient text-primary-foreground">
-                <GraduationCap className="size-4" />
-              </span>
+              <LogoMark size="sm" />
               <span className="font-display font-bold">منصة المُلك</span>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
