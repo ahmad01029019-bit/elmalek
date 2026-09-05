@@ -1402,3 +1402,175 @@ function MarketersTab() {
     </div>
   );
 }
+
+function OffersTab() {
+  const refresh = useRefresh(["admin-offers"]);
+  const { data: offers } = useQuery({
+    queryKey: ["admin-offers"],
+    queryFn: async () =>
+      (await supabase.from("marketer_offers").select("*").order("position")).data ?? [],
+  });
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
+  const [badge, setBadge] = useState("");
+  const [gradient, setGradient] = useState("violet");
+  const [position, setPosition] = useState("");
+  const [editing, setEditing] = useState<string | null>(null);
+
+  function reset() {
+    setTitle("");
+    setDescription("");
+    setImageUrl("");
+    setLinkUrl("");
+    setBadge("");
+    setGradient("violet");
+    setPosition("");
+    setEditing(null);
+  }
+
+  async function save() {
+    if (!title) { toast.error("اكتب عنوان العرض"); return; }
+    const payload = {
+      title,
+      description: description || null,
+      image_url: imageUrl || null,
+      link_url: linkUrl || null,
+      badge: badge || null,
+      gradient,
+      position: Number(position) || 0,
+      is_active: true,
+    };
+    const { error } = editing
+      ? await supabase.from("marketer_offers").update(payload).eq("id", editing)
+      : await supabase.from("marketer_offers").insert(payload);
+    if (error) { toast.error(error.message); return; }
+    toast.success(editing ? "تم تعديل العرض" : "تم إضافة العرض");
+    reset();
+    refresh();
+  }
+
+  async function toggleActive(id: string, isActive: boolean) {
+    const { error } = await supabase.from("marketer_offers").update({ is_active: !isActive }).eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    refresh();
+  }
+
+  async function deleteOffer(id: string) {
+    if (!confirm("هل تريد حذف هذا العرض؟")) return;
+    const { error } = await supabase.from("marketer_offers").delete().eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    refresh();
+  }
+
+  function edit(o: (typeof offers)[number]) {
+    setEditing(o.id);
+    setTitle(o.title);
+    setDescription(o.description ?? "");
+    setImageUrl(o.image_url ?? "");
+    setLinkUrl(o.link_url ?? "");
+    setBadge(o.badge ?? "");
+    setGradient(o.gradient);
+    setPosition(String(o.position));
+  }
+
+  return (
+    <div className="space-y-4">
+      <Section title={editing ? "تعديل عرض" : "إضافة عرض تسويقي جديد"}>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="العنوان">
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={120} />
+          </Field>
+          <Field label="الوصف">
+            <Input value={description} onChange={(e) => setDescription(e.target.value)} maxLength={300} />
+          </Field>
+          <Field label="رابط الصورة">
+            <Input dir="ltr" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." />
+          </Field>
+          <Field label="رابط الانتقال عند الضغط">
+            <Input dir="ltr" value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} placeholder="https://..." />
+          </Field>
+          <Field label="الشارة (Badge)">
+            <Input value={badge} onChange={(e) => setBadge(e.target.value)} maxLength={40} />
+          </Field>
+          <Field label="التدرّج اللوني">
+            <Picker
+              value={gradient}
+              onChange={setGradient}
+              options={[
+                { value: "violet", label: "بنفسجي" },
+                { value: "ocean", label: "أزرق محيطي" },
+                { value: "sunset", label: "غروب" },
+                { value: "forest", label: "أخضر" },
+              ]}
+            />
+          </Field>
+          <Field label="الترتيب">
+            <Input
+              type="number"
+              dir="ltr"
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+              placeholder="0"
+            />
+          </Field>
+        </div>
+        <div className="mt-4 flex gap-2">
+          <Button onClick={save}>{editing ? "حفظ التعديل" : "إضافة العرض"}</Button>
+          {editing && (
+            <Button variant="ghost" onClick={reset}>
+              إلغاء
+            </Button>
+          )}
+        </div>
+      </Section>
+
+      <Section title="العروض الحالية">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {(offers ?? []).map((o) => (
+            <div
+              key={o.id}
+              className={`relative overflow-hidden rounded-2xl p-4 ${
+                o.gradient === "ocean"
+                  ? "offer-gradient-ocean"
+                  : o.gradient === "sunset"
+                    ? "offer-gradient-sunset"
+                    : o.gradient === "forest"
+                      ? "offer-gradient-forest"
+                      : "offer-gradient-violet"
+              } text-primary-foreground`}
+            >
+              {o.image_url && (
+                <img src={o.image_url} alt={o.title} className="absolute inset-0 size-full object-cover opacity-25" />
+              )}
+              <div className="relative">
+                {o.badge && (
+                  <span className="rounded-full bg-white/20 px-2 py-1 text-xs backdrop-blur">{o.badge}</span>
+                )}
+                <h3 className="mt-2 font-bold">{o.title}</h3>
+                {o.description && <p className="mt-1 text-xs opacity-90">{o.description}</p>}
+                <div className="mt-3 flex gap-2">
+                  <Button size="sm" variant="secondary" onClick={() => edit(o)}>
+                    تعديل
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => toggleActive(o.id, o.is_active)}>
+                    {o.is_active ? "إيقاف" : "تفعيل"}
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => deleteOffer(o.id)}>
+                    حذف
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
+          {(offers ?? []).length === 0 && (
+            <p className="text-sm text-muted-foreground">لا توجد عروض بعد.</p>
+          )}
+        </div>
+      </Section>
+    </div>
+  );
+}
+
