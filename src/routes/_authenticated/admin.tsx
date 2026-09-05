@@ -111,6 +111,8 @@ function AdminPage() {
           <TabsTrigger value="library">المكتبة</TabsTrigger>
           <TabsTrigger value="students">الطلاب</TabsTrigger>
           <TabsTrigger value="marketers">المسوّقون</TabsTrigger>
+          <TabsTrigger value="offers">عروض المسوّقين</TabsTrigger>
+
         </TabsList>
 
         <TabsContent value="overview">
