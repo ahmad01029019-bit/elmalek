@@ -71,7 +71,7 @@ function MarketerPortalPage() {
     }
     setLoading(true);
     try {
-      const result = await sendOtp({ email });
+      const result = await sendOtp({ data: { email } });
 
       setOtpSent(true);
       startOtpCountdown();
