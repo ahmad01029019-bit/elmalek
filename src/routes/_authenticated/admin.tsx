@@ -139,6 +139,10 @@ function AdminPage() {
         <TabsContent value="marketers">
           <MarketersTab />
         </TabsContent>
+        <TabsContent value="offers">
+          <OffersTab />
+        </TabsContent>
+
       </Tabs>
     </AppShell>
   );
