@@ -1081,6 +1081,22 @@ function MarketersTab() {
     refresh();
   }
 
+  async function updateMarketer(id: string, patch: { season_students?: number; level?: number; discount_offset?: number }) {
+    const { error } = await supabase.from("marketers").update(patch).eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    toast.success("تم تحديث المسوّق");
+    refresh();
+  }
+
+  async function removeMarketer(id: string) {
+    if (!confirm("هل أنت متأكد من حذف هذا المسوّق؟ سيتم حذف كوده وسجلاته.")) return;
+    const { error } = await supabase.from("marketers").delete().eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    toast.success("تم حذف المسوّق");
+    refresh();
+  }
+
+
   return (
     <div className="space-y-4">
       <Section title="إعدادات برنامج المسوقين">
