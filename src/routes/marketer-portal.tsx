@@ -97,7 +97,7 @@ function MarketerPortalPage() {
           setLoading(false);
           return;
         }
-        await verifyOtp({ email, code: otp });
+        await verifyOtp({ data: { email, code: otp } });
 
 
         const { error } = await supabase.auth.signUp({
