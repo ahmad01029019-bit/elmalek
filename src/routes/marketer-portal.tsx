@@ -50,6 +50,10 @@ function MarketerPortalPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpCountdown, setOtpCountdown] = useState(0);
 
+  const sendOtp = useServerFn(sendMarketerOtp);
+  const verifyOtp = useServerFn(verifyMarketerOtp);
+
+
   function startOtpCountdown() {
     setOtpCountdown(60);
     const timer = setInterval(() => {
