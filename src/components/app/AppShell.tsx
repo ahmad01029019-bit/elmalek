@@ -14,12 +14,12 @@ import {
   LogOut,
   Menu,
   X,
-  GraduationCap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile, useRoles } from "@/lib/auth";
 import { formatEGP } from "@/lib/education";
+import { LogoMark } from "@/components/site/Logo";
 
 const links = [
   { to: "/dashboard", label: "الرئيسية", icon: LayoutDashboard },
