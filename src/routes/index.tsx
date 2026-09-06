@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { BookOpen, GraduationCap, Library, Sparkles, Users, Wallet } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
@@ -6,6 +7,7 @@ import { CourseCard, type CourseCardData } from "@/components/site/CourseCard";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { EDU_TYPES, STAGES } from "@/lib/education";
+import { useSession, useRoles } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,6 +38,21 @@ const features = [
 ];
 
 function Index() {
+  const navigate = useNavigate();
+  const { session } = useSession();
+  const { data: roles } = useRoles();
+
+  useEffect(() => {
+    if (!session) return;
+    const list = roles ?? [];
+    if (list.includes("admin")) return;
+    if (list.includes("marketer")) {
+      navigate({ to: "/marketer", replace: true });
+      return;
+    }
+    navigate({ to: "/dashboard", replace: true });
+  }, [session, roles, navigate]);
+
   const { data: freeCourses } = useQuery({
     queryKey: ["home-free-courses"],
     queryFn: async () => {

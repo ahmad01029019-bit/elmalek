@@ -5,6 +5,7 @@ import { CheckCircle2, Circle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/lib/auth";
+import { Shell } from "@/components/site/Shell";
 
 export const Route = createFileRoute("/learn/$courseId")({
   head: () => ({
