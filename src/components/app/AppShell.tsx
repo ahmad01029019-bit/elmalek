@@ -4,26 +4,29 @@ import { useState, type ReactNode } from "react";
 import {
   LayoutDashboard,
   BookOpen,
+  GraduationCap,
+  Users,
   ShoppingCart,
   Wallet,
   BarChart3,
   ScrollText,
   Library,
   User,
-  Shield,
   LogOut,
   Menu,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { useProfile, useRoles } from "@/lib/auth";
+import { useProfile } from "@/lib/auth";
 import { formatEGP } from "@/lib/education";
 import { LogoMark } from "@/components/site/Logo";
 
 const links = [
   { to: "/dashboard", label: "الرئيسية", icon: LayoutDashboard },
   { to: "/subjects", label: "المواد الدراسية", icon: BookOpen },
+  { to: "/courses", label: "الكورسات", icon: GraduationCap },
+  { to: "/teachers", label: "المعلمون", icon: Users },
   { to: "/cart", label: "سلة الكورسات", icon: ShoppingCart },
   { to: "/wallet", label: "المحفظة", icon: Wallet },
   { to: "/stats", label: "الإحصائيات", icon: BarChart3 },
@@ -37,10 +40,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
   const navigate = useNavigate();
   const qc = useQueryClient();
   const { data: profile } = useProfile();
-  const { data: roles } = useRoles();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-
-  const isAdmin = (roles ?? []).includes("admin");
 
   async function signOut() {
     await qc.cancelQueries();

@@ -67,18 +67,6 @@ function DashboardPage() {
 
   return (
     <AppShell title={`أهلًا ${profile?.full_name || "بك"} 👋`}>
-      {isAdmin && (
-        <div className="mb-4 flex flex-col gap-3 rounded-xl border border-border bg-primary-soft p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-primary">
-            <Shield className="size-5" />
-            <p className="text-sm font-bold">لديك صلاحية مدير على المنصة</p>
-          </div>
-          <Button asChild size="sm">
-            <Link to="/admin">الدخول إلى لوحة الإدارة</Link>
-          </Button>
-        </div>
-      )}
-
       <div className="grid gap-4 sm:grid-cols-3">
 
         <StatCard
