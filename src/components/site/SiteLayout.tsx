@@ -24,7 +24,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
             <LogoMark />
-            <span className="font-display text-lg font-bold">منصة المُلك</span>
+            <span className="font-brand text-lg font-semibold tracking-tight">ElMalek</span>
           </Link>
 
           <nav className="mr-auto hidden items-center gap-1 lg:flex">
@@ -95,7 +95,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <div>
             <div className="flex items-center gap-2">
               <LogoMark size="sm" />
-              <span className="font-display font-bold">منصة المُلك</span>
+              <span className="font-brand text-base font-semibold tracking-tight">ElMalek</span>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               منصة تعليمية متكاملة لطلاب المرحلتين الإعدادية والثانوية — عام وأزهري ولغات، علمي

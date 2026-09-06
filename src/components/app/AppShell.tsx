@@ -53,7 +53,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
     <nav className="flex h-full flex-col gap-1 p-3">
       <Link to="/" className="mb-3 flex items-center gap-2 px-2 py-2">
         <LogoMark />
-        <span className="font-display font-bold">منصة المُلك</span>
+        <span className="font-brand text-lg font-semibold tracking-tight">ElMalek</span>
       </Link>
 
       <div className="mb-3 rounded-xl bg-primary-soft p-3">
