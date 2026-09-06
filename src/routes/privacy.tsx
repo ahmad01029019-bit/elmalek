@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { PageHero, Prose } from "@/components/site/PageHero";
 
 export const Route = createFileRoute("/privacy")({
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   return (
-    <SiteLayout>
+    <Shell title="سياسة الخصوصية">
       <PageHero title="سياسة الخصوصية" subtitle="خصوصية بيانات الطلاب مسؤولية نأخذها على محمل الجد." />
       <Prose>
         <h2>البيانات التي نجمعها</h2>
@@ -50,6 +50,6 @@ function PrivacyPage() {
           بيانات طالب آخر.
         </p>
       </Prose>
-    </SiteLayout>
+    </Shell>
   );
 }

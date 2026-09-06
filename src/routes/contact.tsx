@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { PageHero } from "@/components/site/PageHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,7 +46,7 @@ function ContactPage() {
   }
 
   return (
-    <SiteLayout>
+    <Shell title="تواصل معنا">
       <PageHero title="تواصل معنا" subtitle="نسعد بخدمتك والرد على استفساراتك." />
       <div className="mx-auto grid max-w-5xl gap-8 px-4 py-10 lg:grid-cols-[1fr_320px]">
         <form onSubmit={submit} className="space-y-4 rounded-2xl card-soft p-6">
@@ -95,6 +95,6 @@ function ContactPage() {
           </p>
         </aside>
       </div>
-    </SiteLayout>
+    </Shell>
   );
 }

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { PageHero } from "@/components/site/PageHero";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,7 +36,7 @@ function TeachersPage() {
   });
 
   return (
-    <SiteLayout>
+    <Shell title="المعلمون">
       <PageHero title="المعلمون" subtitle="لكل معلم صفحته الخاصة بكورساته وملفاته واختباراته." />
       <div className="mx-auto max-w-6xl px-4 py-10">
         {isLoading ? (
@@ -85,6 +85,6 @@ function TeachersPage() {
           </div>
         )}
       </div>
-    </SiteLayout>
+    </Shell>
   );
 }

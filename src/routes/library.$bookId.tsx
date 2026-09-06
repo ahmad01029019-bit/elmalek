@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { YouTube } from "@/components/YouTube";
@@ -53,29 +53,29 @@ function BookPage() {
 
   if (isLoading) {
     return (
-      <SiteLayout>
+      <Shell title="كتاب إلكتروني">
         <p className="py-24 text-center text-muted-foreground">جارٍ التحميل...</p>
-      </SiteLayout>
+      </Shell>
     );
   }
 
   if (!book) {
     return (
-      <SiteLayout>
+      <Shell title="كتاب إلكتروني">
         <div className="py-24 text-center">
           <p className="text-muted-foreground">هذا الكتاب غير متاح.</p>
           <Button asChild className="mt-4">
             <Link to="/library">مكتبة المُلك</Link>
           </Button>
         </div>
-      </SiteLayout>
+      </Shell>
     );
   }
 
   const active = (chapters ?? []).find((c) => c.id === activeId);
 
   return (
-    <SiteLayout>
+    <Shell title="كتاب إلكتروني">
       <section className="surface-gradient text-primary-foreground">
         <div className="mx-auto max-w-6xl px-4 py-10">
           <div className="flex flex-wrap gap-2">
@@ -134,6 +134,6 @@ function BookPage() {
           </ul>
         </aside>
       </div>
-    </SiteLayout>
+    </Shell>
   );
 }

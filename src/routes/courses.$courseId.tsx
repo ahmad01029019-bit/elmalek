@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { YouTube } from "@/components/YouTube";
@@ -110,29 +110,29 @@ function CourseDetail() {
 
   if (isLoading) {
     return (
-      <SiteLayout>
+      <Shell title="تفاصيل الكورس">
         <p className="py-24 text-center text-muted-foreground">جارٍ التحميل...</p>
-      </SiteLayout>
+      </Shell>
     );
   }
 
   if (!course) {
     return (
-      <SiteLayout>
+      <Shell title="تفاصيل الكورس">
         <div className="py-24 text-center">
           <p className="text-muted-foreground">الكورس غير موجود.</p>
           <Button asChild className="mt-4">
             <Link to="/courses">كل الكورسات</Link>
           </Button>
         </div>
-      </SiteLayout>
+      </Shell>
     );
   }
 
   const previewLesson = lessons?.find((l) => l.is_preview && l.youtube_id);
 
   return (
-    <SiteLayout>
+    <Shell title="تفاصيل الكورس">
       <section className="surface-gradient text-primary-foreground">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 lg:grid-cols-[1fr_360px]">
           <div>
@@ -214,6 +214,6 @@ function CourseDetail() {
           )}
         </ul>
       </div>
-    </SiteLayout>
+    </Shell>
   );
 }

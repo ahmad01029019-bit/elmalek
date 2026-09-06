@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { PageHero, Prose } from "@/components/site/PageHero";
 
 export const Route = createFileRoute("/terms")({
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/terms")({
 
 function TermsPage() {
   return (
-    <SiteLayout>
+    <Shell title="الشروط والأحكام">
       <PageHero title="الشروط والأحكام" subtitle="باستخدامك للمنصة فأنت توافق على البنود التالية." />
       <Prose>
         <h2>الحساب</h2>
@@ -43,6 +43,6 @@ function TermsPage() {
           <li>يُمنع التسويق المضلل أو استخدام الكود بحسابات وهمية.</li>
         </ul>
       </Prose>
-    </SiteLayout>
+    </Shell>
   );
 }
