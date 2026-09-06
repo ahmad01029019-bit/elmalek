@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteRouteImport } from './routes/_admin/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as MarketerRouteRouteImport } from './routes/_marketer/route'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminPortalRouteImport } from './routes/admin-portal'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -21,7 +23,6 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VisionRouteImport } from './routes/vision'
-import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -36,6 +37,15 @@ import { Route as LibraryIndexRouteImport } from './routes/library.index'
 import { Route as LibraryBookIdRouteImport } from './routes/library.$bookId'
 import { Route as TeachersIndexRouteImport } from './routes/teachers.index'
 import { Route as TeachersSlugRouteImport } from './routes/teachers.$slug'
+import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
+import { Route as AdminAdminCoursesRouteImport } from './routes/_admin/admin.courses'
+import { Route as AdminAdminLessonsRouteImport } from './routes/_admin/admin.lessons'
+import { Route as AdminAdminLibraryRouteImport } from './routes/_admin/admin.library'
+import { Route as AdminAdminMarketersRouteImport } from './routes/_admin/admin.marketers'
+import { Route as AdminAdminOffersRouteImport } from './routes/_admin/admin.offers'
+import { Route as AdminAdminQuizzesRouteImport } from './routes/_admin/admin.quizzes'
+import { Route as AdminAdminStudentsRouteImport } from './routes/_admin/admin.students'
+import { Route as AdminAdminTeachersRouteImport } from './routes/_admin/admin.teachers'
 import { Route as AuthenticatedQuizQuizIdRouteImport } from './routes/_authenticated/quiz.$quizId'
 import { Route as MarketerMarketerIndexRouteImport } from './routes/_marketer/marketer.index'
 import { Route as MarketerMarketerDemoRouteImport } from './routes/_marketer/marketer.demo'
@@ -49,6 +59,10 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/_admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -60,6 +74,11 @@ const MarketerRouteRoute = MarketerRouteRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPortalRoute = AdminPortalRouteImport.update({
+  id: '/admin-portal',
+  path: '/admin-portal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -101,11 +120,6 @@ const VisionRoute = VisionRouteImport.update({
   id: '/vision',
   path: '/vision',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCartRoute = AuthenticatedCartRouteImport.update({
   id: '/cart',
@@ -177,6 +191,51 @@ const TeachersSlugRoute = TeachersSlugRouteImport.update({
   path: '/teachers/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAdminCoursesRoute = AdminAdminCoursesRouteImport.update({
+  id: '/admin/courses',
+  path: '/admin/courses',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAdminLessonsRoute = AdminAdminLessonsRouteImport.update({
+  id: '/admin/lessons',
+  path: '/admin/lessons',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAdminLibraryRoute = AdminAdminLibraryRouteImport.update({
+  id: '/admin/library',
+  path: '/admin/library',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAdminMarketersRoute = AdminAdminMarketersRouteImport.update({
+  id: '/admin/marketers',
+  path: '/admin/marketers',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAdminOffersRoute = AdminAdminOffersRouteImport.update({
+  id: '/admin/offers',
+  path: '/admin/offers',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAdminQuizzesRoute = AdminAdminQuizzesRouteImport.update({
+  id: '/admin/quizzes',
+  path: '/admin/quizzes',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAdminStudentsRoute = AdminAdminStudentsRouteImport.update({
+  id: '/admin/students',
+  path: '/admin/students',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAdminTeachersRoute = AdminAdminTeachersRouteImport.update({
+  id: '/admin/teachers',
+  path: '/admin/teachers',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AuthenticatedQuizQuizIdRoute = AuthenticatedQuizQuizIdRouteImport.update({
   id: '/quiz/$quizId',
   path: '/quiz/$quizId',
@@ -218,6 +277,7 @@ const MarketerMarketerSettingsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin-portal': typeof AdminPortalRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
@@ -226,7 +286,6 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -241,17 +300,27 @@ export interface FileRoutesByFullPath {
   '/courses/': typeof CoursesIndexRoute
   '/library/': typeof LibraryIndexRoute
   '/teachers/': typeof TeachersIndexRoute
+  '/admin/courses': typeof AdminAdminCoursesRoute
+  '/admin/lessons': typeof AdminAdminLessonsRoute
+  '/admin/library': typeof AdminAdminLibraryRoute
+  '/admin/marketers': typeof AdminAdminMarketersRoute
+  '/admin/offers': typeof AdminAdminOffersRoute
+  '/admin/quizzes': typeof AdminAdminQuizzesRoute
+  '/admin/students': typeof AdminAdminStudentsRoute
+  '/admin/teachers': typeof AdminAdminTeachersRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
   '/marketer/demo': typeof MarketerMarketerDemoRoute
   '/marketer/earnings': typeof MarketerMarketerEarningsRoute
   '/marketer/links': typeof MarketerMarketerLinksRoute
   '/marketer/reports': typeof MarketerMarketerReportsRoute
   '/marketer/settings': typeof MarketerMarketerSettingsRoute
+  '/admin/': typeof AdminAdminIndexRoute
   '/marketer/': typeof MarketerMarketerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin-portal': typeof AdminPortalRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
@@ -260,7 +329,6 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/cart': typeof AuthenticatedCartRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -275,20 +343,31 @@ export interface FileRoutesByTo {
   '/courses': typeof CoursesIndexRoute
   '/library': typeof LibraryIndexRoute
   '/teachers': typeof TeachersIndexRoute
+  '/admin/courses': typeof AdminAdminCoursesRoute
+  '/admin/lessons': typeof AdminAdminLessonsRoute
+  '/admin/library': typeof AdminAdminLibraryRoute
+  '/admin/marketers': typeof AdminAdminMarketersRoute
+  '/admin/offers': typeof AdminAdminOffersRoute
+  '/admin/quizzes': typeof AdminAdminQuizzesRoute
+  '/admin/students': typeof AdminAdminStudentsRoute
+  '/admin/teachers': typeof AdminAdminTeachersRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
   '/marketer/demo': typeof MarketerMarketerDemoRoute
   '/marketer/earnings': typeof MarketerMarketerEarningsRoute
   '/marketer/links': typeof MarketerMarketerLinksRoute
   '/marketer/reports': typeof MarketerMarketerReportsRoute
   '/marketer/settings': typeof MarketerMarketerSettingsRoute
+  '/admin': typeof AdminAdminIndexRoute
   '/marketer': typeof MarketerMarketerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_admin': typeof AdminRouteRouteWithChildren
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_marketer': typeof MarketerRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/admin-portal': typeof AdminPortalRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
@@ -297,7 +376,6 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/vision': typeof VisionRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -312,12 +390,21 @@ export interface FileRoutesById {
   '/courses/': typeof CoursesIndexRoute
   '/library/': typeof LibraryIndexRoute
   '/teachers/': typeof TeachersIndexRoute
+  '/_admin/admin/courses': typeof AdminAdminCoursesRoute
+  '/_admin/admin/lessons': typeof AdminAdminLessonsRoute
+  '/_admin/admin/library': typeof AdminAdminLibraryRoute
+  '/_admin/admin/marketers': typeof AdminAdminMarketersRoute
+  '/_admin/admin/offers': typeof AdminAdminOffersRoute
+  '/_admin/admin/quizzes': typeof AdminAdminQuizzesRoute
+  '/_admin/admin/students': typeof AdminAdminStudentsRoute
+  '/_admin/admin/teachers': typeof AdminAdminTeachersRoute
   '/_authenticated/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
   '/_marketer/marketer/demo': typeof MarketerMarketerDemoRoute
   '/_marketer/marketer/earnings': typeof MarketerMarketerEarningsRoute
   '/_marketer/marketer/links': typeof MarketerMarketerLinksRoute
   '/_marketer/marketer/reports': typeof MarketerMarketerReportsRoute
   '/_marketer/marketer/settings': typeof MarketerMarketerSettingsRoute
+  '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_marketer/marketer/': typeof MarketerMarketerIndexRoute
 }
 export interface FileRouteTypes {
@@ -325,6 +412,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin-portal'
     | '/auth'
     | '/contact'
     | '/faq'
@@ -333,7 +421,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/terms'
     | '/vision'
-    | '/admin'
     | '/cart'
     | '/dashboard'
     | '/profile'
@@ -348,17 +435,27 @@ export interface FileRouteTypes {
     | '/courses/'
     | '/library/'
     | '/teachers/'
+    | '/admin/courses'
+    | '/admin/lessons'
+    | '/admin/library'
+    | '/admin/marketers'
+    | '/admin/offers'
+    | '/admin/quizzes'
+    | '/admin/students'
+    | '/admin/teachers'
     | '/quiz/$quizId'
     | '/marketer/demo'
     | '/marketer/earnings'
     | '/marketer/links'
     | '/marketer/reports'
     | '/marketer/settings'
+    | '/admin/'
     | '/marketer/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/admin-portal'
     | '/auth'
     | '/contact'
     | '/faq'
@@ -367,7 +464,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/terms'
     | '/vision'
-    | '/admin'
     | '/cart'
     | '/dashboard'
     | '/profile'
@@ -382,19 +478,30 @@ export interface FileRouteTypes {
     | '/courses'
     | '/library'
     | '/teachers'
+    | '/admin/courses'
+    | '/admin/lessons'
+    | '/admin/library'
+    | '/admin/marketers'
+    | '/admin/offers'
+    | '/admin/quizzes'
+    | '/admin/students'
+    | '/admin/teachers'
     | '/quiz/$quizId'
     | '/marketer/demo'
     | '/marketer/earnings'
     | '/marketer/links'
     | '/marketer/reports'
     | '/marketer/settings'
+    | '/admin'
     | '/marketer'
   id:
     | '__root__'
     | '/'
+    | '/_admin'
     | '/_authenticated'
     | '/_marketer'
     | '/about'
+    | '/admin-portal'
     | '/auth'
     | '/contact'
     | '/faq'
@@ -403,7 +510,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/terms'
     | '/vision'
-    | '/_authenticated/admin'
     | '/_authenticated/cart'
     | '/_authenticated/dashboard'
     | '/_authenticated/profile'
@@ -418,20 +524,31 @@ export interface FileRouteTypes {
     | '/courses/'
     | '/library/'
     | '/teachers/'
+    | '/_admin/admin/courses'
+    | '/_admin/admin/lessons'
+    | '/_admin/admin/library'
+    | '/_admin/admin/marketers'
+    | '/_admin/admin/offers'
+    | '/_admin/admin/quizzes'
+    | '/_admin/admin/students'
+    | '/_admin/admin/teachers'
     | '/_authenticated/quiz/$quizId'
     | '/_marketer/marketer/demo'
     | '/_marketer/marketer/earnings'
     | '/_marketer/marketer/links'
     | '/_marketer/marketer/reports'
     | '/_marketer/marketer/settings'
+    | '/_admin/admin/'
     | '/_marketer/marketer/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   MarketerRouteRoute: typeof MarketerRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  AdminPortalRoute: typeof AdminPortalRoute
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
@@ -458,6 +575,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_admin': {
+      id: '/_admin'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -477,6 +601,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-portal': {
+      id: '/admin-portal'
+      path: '/admin-portal'
+      fullPath: '/admin-portal'
+      preLoaderRoute: typeof AdminPortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -534,13 +665,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/vision'
       preLoaderRoute: typeof VisionRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/cart': {
       id: '/_authenticated/cart'
@@ -640,6 +764,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeachersSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_admin/admin/': {
+      id: '/_admin/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminAdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/admin/courses': {
+      id: '/_admin/admin/courses'
+      path: '/admin/courses'
+      fullPath: '/admin/courses'
+      preLoaderRoute: typeof AdminAdminCoursesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/admin/lessons': {
+      id: '/_admin/admin/lessons'
+      path: '/admin/lessons'
+      fullPath: '/admin/lessons'
+      preLoaderRoute: typeof AdminAdminLessonsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/admin/library': {
+      id: '/_admin/admin/library'
+      path: '/admin/library'
+      fullPath: '/admin/library'
+      preLoaderRoute: typeof AdminAdminLibraryRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/admin/marketers': {
+      id: '/_admin/admin/marketers'
+      path: '/admin/marketers'
+      fullPath: '/admin/marketers'
+      preLoaderRoute: typeof AdminAdminMarketersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/admin/offers': {
+      id: '/_admin/admin/offers'
+      path: '/admin/offers'
+      fullPath: '/admin/offers'
+      preLoaderRoute: typeof AdminAdminOffersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/admin/quizzes': {
+      id: '/_admin/admin/quizzes'
+      path: '/admin/quizzes'
+      fullPath: '/admin/quizzes'
+      preLoaderRoute: typeof AdminAdminQuizzesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/admin/students': {
+      id: '/_admin/admin/students'
+      path: '/admin/students'
+      fullPath: '/admin/students'
+      preLoaderRoute: typeof AdminAdminStudentsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/admin/teachers': {
+      id: '/_admin/admin/teachers'
+      path: '/admin/teachers'
+      fullPath: '/admin/teachers'
+      preLoaderRoute: typeof AdminAdminTeachersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/_authenticated/quiz/$quizId': {
       id: '/_authenticated/quiz/$quizId'
       path: '/quiz/$quizId'
@@ -692,8 +879,35 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteRouteChildren {
+  AdminAdminCoursesRoute: typeof AdminAdminCoursesRoute
+  AdminAdminLessonsRoute: typeof AdminAdminLessonsRoute
+  AdminAdminLibraryRoute: typeof AdminAdminLibraryRoute
+  AdminAdminMarketersRoute: typeof AdminAdminMarketersRoute
+  AdminAdminOffersRoute: typeof AdminAdminOffersRoute
+  AdminAdminQuizzesRoute: typeof AdminAdminQuizzesRoute
+  AdminAdminStudentsRoute: typeof AdminAdminStudentsRoute
+  AdminAdminTeachersRoute: typeof AdminAdminTeachersRoute
+  AdminAdminIndexRoute: typeof AdminAdminIndexRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminAdminCoursesRoute: AdminAdminCoursesRoute,
+  AdminAdminLessonsRoute: AdminAdminLessonsRoute,
+  AdminAdminLibraryRoute: AdminAdminLibraryRoute,
+  AdminAdminMarketersRoute: AdminAdminMarketersRoute,
+  AdminAdminOffersRoute: AdminAdminOffersRoute,
+  AdminAdminQuizzesRoute: AdminAdminQuizzesRoute,
+  AdminAdminStudentsRoute: AdminAdminStudentsRoute,
+  AdminAdminTeachersRoute: AdminAdminTeachersRoute,
+  AdminAdminIndexRoute: AdminAdminIndexRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -705,7 +919,6 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
@@ -743,9 +956,11 @@ const MarketerRouteRouteWithChildren = MarketerRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   MarketerRouteRoute: MarketerRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  AdminPortalRoute: AdminPortalRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,

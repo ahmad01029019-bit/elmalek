@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { PageHero } from "@/components/site/PageHero";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
@@ -37,7 +37,7 @@ function LibraryPage() {
   });
 
   return (
-    <SiteLayout>
+    <Shell title="مكتبة المُلك">
       <PageHero
         title="مكتبة المُلك"
         subtitle="كتب إلكترونية على هيئة تدريبات وامتحانات، ولكل فصل فيديو حل تفصيلي."
@@ -85,6 +85,6 @@ function LibraryPage() {
           </div>
         )}
       </div>
-    </SiteLayout>
+    </Shell>
   );
 }

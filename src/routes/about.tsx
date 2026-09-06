@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { PageHero, Prose } from "@/components/site/PageHero";
 
 export const Route = createFileRoute("/about")({
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/about")({
 
 function AboutPage() {
   return (
-    <SiteLayout>
+    <Shell title="من نحن">
       <PageHero
         title="من نحن"
         subtitle="منصة تعليمية مصرية تجمع أفضل المحتوى التعليمي وتعيد تنظيمه في كورسات كاملة ومنظمة."
@@ -46,6 +46,6 @@ function AboutPage() {
           <li>سجل دراسي وإحصائيات تفصيلية لتقدم الطالب.</li>
         </ul>
       </Prose>
-    </SiteLayout>
+    </Shell>
   );
 }

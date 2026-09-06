@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { PageHero, Prose } from "@/components/site/PageHero";
 
 export const Route = createFileRoute("/vision")({
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/vision")({
 
 function VisionPage() {
   return (
-    <SiteLayout>
+    <Shell title="الرؤية والرسالة">
       <PageHero title="الرؤية والرسالة" subtitle="نؤمن أن التعليم الجيد حق لكل طالب مهما كانت إمكانياته." />
       <Prose>
         <h2>رؤيتنا</h2>
@@ -40,6 +40,6 @@ function VisionPage() {
           <li>الخصوصية: حماية بيانات الطلاب وأولياء الأمور.</li>
         </ul>
       </Prose>
-    </SiteLayout>
+    </Shell>
   );
 }

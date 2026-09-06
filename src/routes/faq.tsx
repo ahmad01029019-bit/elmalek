@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { PageHero } from "@/components/site/PageHero";
 import {
   Accordion,
@@ -52,7 +52,7 @@ const faqs = [
 
 function FaqPage() {
   return (
-    <SiteLayout>
+    <Shell title="الأسئلة الشائعة">
       <PageHero title="الأسئلة الشائعة" subtitle="أسرع طريقة للحصول على إجابة." />
       <div className="mx-auto max-w-3xl px-4 py-10">
         <Accordion type="single" collapsible className="w-full">
@@ -64,6 +64,6 @@ function FaqPage() {
           ))}
         </Accordion>
       </div>
-    </SiteLayout>
+    </Shell>
   );
 }

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { CourseCard, type CourseCardData } from "@/components/site/CourseCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -52,27 +52,27 @@ function TeacherPage() {
 
   if (isLoading) {
     return (
-      <SiteLayout>
+      <Shell title="صفحة المعلم">
         <p className="py-24 text-center text-muted-foreground">جارٍ التحميل...</p>
-      </SiteLayout>
+      </Shell>
     );
   }
 
   if (!teacher) {
     return (
-      <SiteLayout>
+      <Shell title="صفحة المعلم">
         <div className="py-24 text-center">
           <p className="text-muted-foreground">هذا المعلم غير موجود.</p>
           <Button asChild className="mt-4">
             <Link to="/teachers">كل المعلمين</Link>
           </Button>
         </div>
-      </SiteLayout>
+      </Shell>
     );
   }
 
   return (
-    <SiteLayout>
+    <Shell title="صفحة المعلم">
       <section className="surface-gradient text-primary-foreground">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-12 text-center sm:flex-row sm:text-right">
           {teacher.avatar_url ? (
@@ -113,6 +113,6 @@ function TeacherPage() {
           </div>
         )}
       </div>
-    </SiteLayout>
+    </Shell>
   );
 }

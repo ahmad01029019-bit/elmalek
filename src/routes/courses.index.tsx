@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { SiteLayout } from "@/components/site/SiteLayout";
+import { Shell } from "@/components/site/Shell";
 import { PageHero } from "@/components/site/PageHero";
 import { CourseCard, type CourseCardData } from "@/components/site/CourseCard";
 import { Input } from "@/components/ui/input";
@@ -55,7 +55,7 @@ function CoursesPage() {
   }, [data, stage, track, eduType, q]);
 
   return (
-    <SiteLayout>
+    <Shell title="الكورسات">
       <PageHero title="الكورسات" subtitle="اختر صفك وشعبتك واعثر على الكورس المناسب لك." />
 
       <div className="mx-auto max-w-6xl px-4 py-8">
@@ -83,7 +83,7 @@ function CoursesPage() {
           </div>
         )}
       </div>
-    </SiteLayout>
+    </Shell>
   );
 }
 

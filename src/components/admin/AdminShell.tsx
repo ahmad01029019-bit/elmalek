@@ -3,66 +3,55 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import {
   LayoutDashboard,
-  BookOpen,
   GraduationCap,
-  Users,
-  ShoppingCart,
-  Wallet,
-  BarChart3,
-  ScrollText,
+  BookOpen,
+  PlayCircle,
+  FileQuestion,
   Library,
-  User,
+  Users,
+  Megaphone,
+  Tag,
   LogOut,
   Menu,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { useProfile } from "@/lib/auth";
-import { formatEGP } from "@/lib/education";
 import { LogoMark } from "@/components/site/Logo";
 
 const links = [
-  { to: "/dashboard", label: "الرئيسية", icon: LayoutDashboard },
-  { to: "/subjects", label: "المواد الدراسية", icon: BookOpen },
-  { to: "/courses", label: "الكورسات", icon: GraduationCap },
-  { to: "/teachers", label: "المعلمون", icon: Users },
-  { to: "/cart", label: "سلة الكورسات", icon: ShoppingCart },
-  { to: "/wallet", label: "المحفظة", icon: Wallet },
-  { to: "/stats", label: "الإحصائيات", icon: BarChart3 },
-  { to: "/records", label: "السجل الدراسي", icon: ScrollText },
-  { to: "/library", label: "مكتبة المُلك", icon: Library },
-  { to: "/profile", label: "ملفي الشخصي", icon: User },
+  { to: "/admin", label: "نظرة عامة", icon: LayoutDashboard },
+  { to: "/admin/teachers", label: "المعلمون", icon: GraduationCap },
+  { to: "/admin/courses", label: "الكورسات", icon: BookOpen },
+  { to: "/admin/lessons", label: "الدروس", icon: PlayCircle },
+  { to: "/admin/quizzes", label: "الاختبارات", icon: FileQuestion },
+  { to: "/admin/library", label: "المكتبة", icon: Library },
+  { to: "/admin/students", label: "الطلاب", icon: Users },
+  { to: "/admin/marketers", label: "المسوّقون", icon: Megaphone },
+  { to: "/admin/offers", label: "عروض المسوّقين", icon: Tag },
 ] as const;
 
-export function AppShell({ children, title }: { children: ReactNode; title: string }) {
+export function AdminShell({ children, title }: { children: ReactNode; title: string }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const qc = useQueryClient();
-  const { data: profile } = useProfile();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   async function signOut() {
     await qc.cancelQueries();
     qc.clear();
     await supabase.auth.signOut();
-    navigate({ to: "/auth", search: { mode: "login" }, replace: true });
+    navigate({ to: "/admin-portal", replace: true });
   }
 
   const sidebar = (
     <nav className="flex h-full flex-col gap-1 p-3">
-      <Link to="/" className="mb-3 flex items-center gap-2 px-2 py-2">
+      <div className="mb-3 flex items-center gap-2 px-2 py-2">
         <LogoMark />
-        <span className="font-brand text-lg font-semibold tracking-tight">ElMalek</span>
-      </Link>
-
-      <div className="mb-3 rounded-xl bg-primary-soft p-3">
-        <p className="truncate text-sm font-bold text-primary">
-          {profile?.full_name || "طالب جديد"}
-        </p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          الرصيد: {formatEGP(profile?.wallet_balance ?? 0)}
-        </p>
+        <div>
+          <p className="font-brand text-base font-semibold leading-tight tracking-tight">ElMalek</p>
+          <p className="text-[11px] text-muted-foreground">لوحة الإدارة</p>
+        </div>
       </div>
 
       {links.map((l) => {
@@ -83,8 +72,6 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
           </Link>
         );
       })}
-
-
 
       <Button variant="ghost" className="mt-auto justify-start" onClick={signOut}>
         <LogOut className="size-4" /> تسجيل الخروج
