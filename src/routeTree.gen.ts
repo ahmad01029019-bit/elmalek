@@ -14,6 +14,7 @@ import { Route as AdminRouteRouteImport } from './routes/_admin/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as MarketerRouteRouteImport } from './routes/_marketer/route'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminPortalRouteImport } from './routes/admin-portal'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -73,6 +74,11 @@ const MarketerRouteRoute = MarketerRouteRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPortalRoute = AdminPortalRouteImport.update({
+  id: '/admin-portal',
+  path: '/admin-portal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -271,6 +277,7 @@ const MarketerMarketerSettingsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin-portal': typeof AdminPortalRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
@@ -313,6 +320,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin-portal': typeof AdminPortalRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
@@ -359,6 +367,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_marketer': typeof MarketerRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/admin-portal': typeof AdminPortalRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
@@ -403,6 +412,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin-portal'
     | '/auth'
     | '/contact'
     | '/faq'
@@ -445,6 +455,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/admin-portal'
     | '/auth'
     | '/contact'
     | '/faq'
@@ -490,6 +501,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/_marketer'
     | '/about'
+    | '/admin-portal'
     | '/auth'
     | '/contact'
     | '/faq'
@@ -536,6 +548,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   MarketerRouteRoute: typeof MarketerRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  AdminPortalRoute: typeof AdminPortalRoute
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
@@ -588,6 +601,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-portal': {
+      id: '/admin-portal'
+      path: '/admin-portal'
+      fullPath: '/admin-portal'
+      preLoaderRoute: typeof AdminPortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -940,6 +960,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   MarketerRouteRoute: MarketerRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  AdminPortalRoute: AdminPortalRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
