@@ -85,19 +85,6 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
       })}
 
 
-      {isAdmin && (
-        <Link
-          to="/admin"
-          onClick={() => setOpen(false)}
-          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
-            pathname === "/admin"
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-          }`}
-        >
-          <Shield className="size-4" /> لوحة الإدارة
-        </Link>
-      )}
 
       <Button variant="ghost" className="mt-auto justify-start" onClick={signOut}>
         <LogOut className="size-4" /> تسجيل الخروج
