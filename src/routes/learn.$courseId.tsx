@@ -79,7 +79,8 @@ function LearnPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <Shell title={course?.title ?? "مشغل الدروس"}>
+      <div className="bg-background">
       <header className="flex items-center justify-between border-b border-border px-4 py-3">
         <h1 className="truncate font-bold">{course?.title ?? "الكورس"}</h1>
         <Link
@@ -160,6 +161,7 @@ function LearnPage() {
           )}
         </aside>
       </div>
-    </div>
+      </div>
+    </Shell>
   );
 }
