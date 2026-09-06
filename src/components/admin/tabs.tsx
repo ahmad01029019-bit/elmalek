@@ -1,14 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
-import { AppShell } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -17,23 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { useIsAdmin } from "@/lib/auth";
 import { STAGES, TRACKS, EDU_TYPES, formatEGP } from "@/lib/education";
 
-export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({
-    meta: [
-      { title: "لوحة الإدارة | منصة المُلك" },
-      {
-        name: "description",
-        content: "إدارة المعلمين والكورسات والدروس والاختبارات والمكتبة والمسوقين في منصة المُلك.",
-      },
-      { property: "og:title", content: "لوحة الإدارة | منصة المُلك" },
-      { property: "og:description", content: "إدارة كاملة لمحتوى المنصة التعليمية." },
-    ],
-  }),
-  component: AdminPage,
-});
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -86,69 +68,8 @@ function Picker({
   );
 }
 
-function AdminPage() {
-  const isAdmin = useIsAdmin();
 
-  if (!isAdmin) {
-    return (
-      <AppShell title="لوحة الإدارة">
-        <p className="rounded-2xl card-soft p-8 text-center text-sm text-muted-foreground">
-          هذه الصفحة متاحة لمديري المنصة فقط.
-        </p>
-      </AppShell>
-    );
-  }
-
-  return (
-    <AppShell title="لوحة الإدارة">
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="flex w-full flex-wrap justify-start">
-          <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
-          <TabsTrigger value="teachers">المعلمون</TabsTrigger>
-          <TabsTrigger value="courses">الكورسات</TabsTrigger>
-          <TabsTrigger value="lessons">الدروس</TabsTrigger>
-          <TabsTrigger value="quizzes">الاختبارات</TabsTrigger>
-          <TabsTrigger value="library">المكتبة</TabsTrigger>
-          <TabsTrigger value="students">الطلاب</TabsTrigger>
-          <TabsTrigger value="marketers">المسوّقون</TabsTrigger>
-          <TabsTrigger value="offers">عروض المسوّقين</TabsTrigger>
-
-        </TabsList>
-
-        <TabsContent value="overview">
-          <Overview />
-        </TabsContent>
-        <TabsContent value="teachers">
-          <TeachersTab />
-        </TabsContent>
-        <TabsContent value="courses">
-          <CoursesTab />
-        </TabsContent>
-        <TabsContent value="lessons">
-          <LessonsTab />
-        </TabsContent>
-        <TabsContent value="quizzes">
-          <QuizzesTab />
-        </TabsContent>
-        <TabsContent value="library">
-          <LibraryTab />
-        </TabsContent>
-        <TabsContent value="students">
-          <StudentsTab />
-        </TabsContent>
-        <TabsContent value="marketers">
-          <MarketersTab />
-        </TabsContent>
-        <TabsContent value="offers">
-          <OffersTab />
-        </TabsContent>
-
-      </Tabs>
-    </AppShell>
-  );
-}
-
-function Overview() {
+export function Overview() {
   const { data } = useQuery({
     queryKey: ["admin-overview"],
     queryFn: async () => {
@@ -191,7 +112,7 @@ function useRefresh(keys: string[]) {
   return () => keys.forEach((k) => void qc.invalidateQueries({ queryKey: [k] }));
 }
 
-function TeachersTab() {
+export function TeachersTab() {
   const refresh = useRefresh(["admin-teachers", "admin-courses"]);
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -291,7 +212,7 @@ function TeachersTab() {
   );
 }
 
-function CoursesTab() {
+export function CoursesTab() {
   const refresh = useRefresh(["admin-courses"]);
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
@@ -450,7 +371,7 @@ function CoursesTab() {
   );
 }
 
-function LessonsTab() {
+export function LessonsTab() {
   const refresh = useRefresh(["admin-lessons"]);
   const [courseId, setCourseId] = useState("");
   const [title, setTitle] = useState("");
@@ -599,7 +520,7 @@ function LessonsTab() {
   );
 }
 
-function QuizzesTab() {
+export function QuizzesTab() {
   const refresh = useRefresh(["admin-quizzes", "admin-questions"]);
   const [courseId, setCourseId] = useState("");
   const [title, setTitle] = useState("");
@@ -777,7 +698,7 @@ function QuizzesTab() {
   );
 }
 
-function LibraryTab() {
+export function LibraryTab() {
   const refresh = useRefresh(["admin-books", "admin-chapters"]);
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
@@ -902,7 +823,7 @@ function LibraryTab() {
   );
 }
 
-function StudentsTab() {
+export function StudentsTab() {
   const refresh = useRefresh(["admin-students"]);
   const [amount, setAmount] = useState("100");
 
@@ -958,7 +879,7 @@ function StudentsTab() {
   );
 }
 
-function MarketersTab() {
+export function MarketersTab() {
   const refresh = useRefresh([
     "admin-marketers",
     "admin-promos",
@@ -1403,7 +1324,7 @@ function MarketersTab() {
   );
 }
 
-function OffersTab() {
+export function OffersTab() {
   const refresh = useRefresh(["admin-offers"]);
   const { data: offers } = useQuery({
     queryKey: ["admin-offers"],
